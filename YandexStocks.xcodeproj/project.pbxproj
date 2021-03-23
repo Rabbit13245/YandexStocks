@@ -7,23 +7,39 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		849BA764260A0AEF00F79F05 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849BA763260A0AEF00F79F05 /* Network.swift */; };
+		849BA767260A0DF200F79F05 /* StocksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849BA766260A0DF200F79F05 /* StocksManager.swift */; };
 		849D147C2609D7CB0000290A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D147B2609D7CB0000290A /* AppDelegate.swift */; };
-		849D147E2609D7CB0000290A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D147D2609D7CB0000290A /* SceneDelegate.swift */; };
-		849D14802609D7CB0000290A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D147F2609D7CB0000290A /* ViewController.swift */; };
-		849D14832609D7CB0000290A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 849D14812609D7CB0000290A /* Main.storyboard */; };
 		849D14852609D7CC0000290A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 849D14842609D7CC0000290A /* Assets.xcassets */; };
 		849D14882609D7CC0000290A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 849D14862609D7CC0000290A /* LaunchScreen.storyboard */; };
+		849D14A32609DD440000290A /* StockTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14A12609DD440000290A /* StockTableViewCell.swift */; };
+		849D14A42609DD440000290A /* StockTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 849D14A22609DD440000290A /* StockTableViewCell.xib */; };
+		849D14A72609E26A0000290A /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14A62609E26A0000290A /* Design.swift */; };
+		849D14AA2609E4820000290A /* IConfigurableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14A92609E4820000290A /* IConfigurableView.swift */; };
+		849D14AD2609E4B70000290A /* Stock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14AC2609E4B70000290A /* Stock.swift */; };
+		849D14B12609E6860000290A /* StocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14B02609E6860000290A /* StocksViewController.swift */; };
+		849D14B62609E9860000290A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 849D14B52609E9860000290A /* Main.storyboard */; };
+		849D14BB2609E9CE0000290A /* StocksTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14BA2609E9CE0000290A /* StocksTableViewDataSource.swift */; };
+		849D14BE2609EA920000290A /* StocksTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14BD2609EA920000290A /* StocksTableViewDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		849BA763260A0AEF00F79F05 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		849BA766260A0DF200F79F05 /* StocksManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksManager.swift; sourceTree = "<group>"; };
 		849D14782609D7CB0000290A /* YandexStocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YandexStocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		849D147B2609D7CB0000290A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		849D147D2609D7CB0000290A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		849D147F2609D7CB0000290A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		849D14822609D7CB0000290A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		849D14842609D7CC0000290A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		849D14872609D7CC0000290A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		849D14892609D7CC0000290A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		849D14A12609DD440000290A /* StockTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableViewCell.swift; sourceTree = "<group>"; };
+		849D14A22609DD440000290A /* StockTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StockTableViewCell.xib; sourceTree = "<group>"; };
+		849D14A62609E26A0000290A /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
+		849D14A92609E4820000290A /* IConfigurableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IConfigurableView.swift; sourceTree = "<group>"; };
+		849D14AC2609E4B70000290A /* Stock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stock.swift; sourceTree = "<group>"; };
+		849D14B02609E6860000290A /* StocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksViewController.swift; sourceTree = "<group>"; };
+		849D14B52609E9860000290A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		849D14BA2609E9CE0000290A /* StocksTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksTableViewDataSource.swift; sourceTree = "<group>"; };
+		849D14BD2609EA920000290A /* StocksTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksTableViewDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +72,55 @@
 		849D147A2609D7CB0000290A /* YandexStocks */ = {
 			isa = PBXGroup;
 			children = (
-				849D147B2609D7CB0000290A /* AppDelegate.swift */,
-				849D147D2609D7CB0000290A /* SceneDelegate.swift */,
-				849D147F2609D7CB0000290A /* ViewController.swift */,
-				849D14812609D7CB0000290A /* Main.storyboard */,
-				849D14842609D7CC0000290A /* Assets.xcassets */,
-				849D14862609D7CC0000290A /* LaunchScreen.storyboard */,
 				849D14892609D7CC0000290A /* Info.plist */,
+				849D14972609D9680000290A /* Recources */,
+				849D14962609D9640000290A /* Controller */,
+				849D14952609D9600000290A /* View */,
+				849D14942609D95C0000290A /* Model */,
+				849D147B2609D7CB0000290A /* AppDelegate.swift */,
+				849D14A62609E26A0000290A /* Design.swift */,
 			);
 			path = YandexStocks;
+			sourceTree = "<group>";
+		};
+		849D14942609D95C0000290A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				849D14AC2609E4B70000290A /* Stock.swift */,
+				849D14BA2609E9CE0000290A /* StocksTableViewDataSource.swift */,
+				849D14BD2609EA920000290A /* StocksTableViewDelegate.swift */,
+				849BA763260A0AEF00F79F05 /* Network.swift */,
+				849BA766260A0DF200F79F05 /* StocksManager.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		849D14952609D9600000290A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				849D14A12609DD440000290A /* StockTableViewCell.swift */,
+				849D14A22609DD440000290A /* StockTableViewCell.xib */,
+				849D14A92609E4820000290A /* IConfigurableView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		849D14962609D9640000290A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				849D14B02609E6860000290A /* StocksViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		849D14972609D9680000290A /* Recources */ = {
+			isa = PBXGroup;
+			children = (
+				849D14862609D7CC0000290A /* LaunchScreen.storyboard */,
+				849D14B52609E9860000290A /* Main.storyboard */,
+				849D14842609D7CC0000290A /* Assets.xcassets */,
+			);
+			path = Recources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,7 +182,8 @@
 			files = (
 				849D14882609D7CC0000290A /* LaunchScreen.storyboard in Resources */,
 				849D14852609D7CC0000290A /* Assets.xcassets in Resources */,
-				849D14832609D7CB0000290A /* Main.storyboard in Resources */,
+				849D14A42609DD440000290A /* StockTableViewCell.xib in Resources */,
+				849D14B62609E9860000290A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,23 +194,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				849D14802609D7CB0000290A /* ViewController.swift in Sources */,
+				849D14B12609E6860000290A /* StocksViewController.swift in Sources */,
+				849D14AA2609E4820000290A /* IConfigurableView.swift in Sources */,
 				849D147C2609D7CB0000290A /* AppDelegate.swift in Sources */,
-				849D147E2609D7CB0000290A /* SceneDelegate.swift in Sources */,
+				849D14AD2609E4B70000290A /* Stock.swift in Sources */,
+				849D14A32609DD440000290A /* StockTableViewCell.swift in Sources */,
+				849BA764260A0AEF00F79F05 /* Network.swift in Sources */,
+				849BA767260A0DF200F79F05 /* StocksManager.swift in Sources */,
+				849D14BE2609EA920000290A /* StocksTableViewDelegate.swift in Sources */,
+				849D14BB2609E9CE0000290A /* StocksTableViewDataSource.swift in Sources */,
+				849D14A72609E26A0000290A /* Design.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		849D14812609D7CB0000290A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				849D14822609D7CB0000290A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		849D14862609D7CC0000290A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -216,7 +272,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -271,7 +327,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
