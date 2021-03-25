@@ -23,6 +23,5 @@ enum Font {
 enum Color {
     static let accentGreen = UIColor(red: 36/255, green: 178/255, blue: 93/255, alpha: 1)
     static let accentRed = UIColor(red: 178/255, green: 36/255, blue: 36/255, alpha: 1)
-    static let gray = UIColor(red: 240/255, green: 244/255, blue: 247/255, alpha: 1)
     static let black = UIColor(red: 26/255, green: 26/255, blue: 26/255, alpha: 1)
 }

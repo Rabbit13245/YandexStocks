@@ -28,9 +28,11 @@ class MobiumParser: IParser {
 
         return mobiumResponce.quotes.map {
             let isGrowth = $0.regularMarketChangePercent > 0
-            var change = String(format: ".2f", $0.regularMarketChangePercent) + "%"
+            var change = "$\(String(format: "%.2f", abs($0.regularMarketChange))) (\(String(format: "%.2f", abs($0.regularMarketChangePercent)))%)"
             if isGrowth {
                 change = "+" + change
+            } else {
+                change = "-" + change
             }
             return Stock(ticker: $0.symbol,
                          name: $0.longName,

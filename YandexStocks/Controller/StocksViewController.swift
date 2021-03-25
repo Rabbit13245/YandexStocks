@@ -12,18 +12,31 @@ class StocksViewController: UIViewController {
     // MARK: - Private properties
     private let segments = ["Stocks", "Favourite"]
     private let cellId = "StockCellId"
+    private var currentSegment = 0
     
     let tableViewDelegate = StocksTableViewDelegate()
     let tableViewDataSource = StocksTableViewDataSource()
     
     // MARK: - UI
+    private lazy var stockHeader: StockHeaderView = {
+        let header = StockHeaderView(segments: segments)
+        header.valueChangedCallback = {[weak self] (value) in
+            self?.valueChanged(value)
+        }
+        return header
+    }()
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(UINib(nibName: String(describing: StockTableViewCell.self), bundle: nil), forCellReuseIdentifier: StockTableViewCell.identifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
+        tableView.allowsSelection = false
         tableView.dataSource = tableViewDataSource
         tableView.delegate = tableViewDelegate
+        
+        tableViewDelegate.headerView = stockHeader
         return tableView
     }()
     
@@ -64,17 +77,25 @@ class StocksViewController: UIViewController {
                 self?.tableView.reloadData()
             }
         }
+        
+        loadData()
     }
     
     // MARK: - Private methods
+    private func loadData() {
+        
+    }
+    
     private func setupView() {
         let leftItem = UIBarButtonItem(customView: titleStackView)
         navigationItem.leftBarButtonItem = leftItem
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
         
+        view.backgroundColor = UIColor.systemBackground
+
         view.addSubview(tableView)
-        
+    
         setupLayout()
     }
     
@@ -87,4 +108,8 @@ class StocksViewController: UIViewController {
         ])
     }
     
+    private func valueChanged(_ value: Int) {
+        currentSegment = value
+        tableViewDataSource.changeView(currentSegment)
+    }
 }

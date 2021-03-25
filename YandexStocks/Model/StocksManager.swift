@@ -14,16 +14,11 @@ protocol IStocksManager {
 class StocksManager: IStocksManager {
     private var networkManager = NetworkManager()
     
-    private let mboumToken = "M5VTjpNUTaMyYISvj7ScDjgPEx2QREZIuNNyIogUBjO0JlVzazEZiGuUWDEd"
-    private let mboumTrendUrlString = "https://mboum.com/api/v1/co/collections/?list=most_actives&start=1&apikey="
-   
-    private let iexapisToken = "token=pk_2b9abbcc4e2d4f3188ec43a577ad3651"
-    private let iexapisTrendUrlString = "https://cloud.iexapis.com/stable/stock/market/collection/list?collectionName=mostactive"
-    
     func getStocksTrend(completion: @escaping (Result<[Stock], StocksManagerError>) -> Void) {
-        
-        let url = URL(string: "\(mboumTrendUrlString)\(mboumToken)")
-        let request = Request(url: url, parser: MobiumParser())
+        guard let request = RequestFactory.getFakeTrendStocksRequest() else {
+            completion(.failure(.error))
+            return
+        }
         
         networkManager.makeRequest(request) { (result) in
             switch result {
@@ -33,6 +28,29 @@ class StocksManager: IStocksManager {
                 completion(.success(data))
             }
         }
+    }
+    
+    func getSavedFavouriteStocks() -> [Stock] {
+        guard let savedFavourite = CoreDataManager.shared.fetchEntities(withName: String(describing: StockDB.self)) as? [StockDB] else {
+            return [Stock]()
+        }
+        return savedFavourite.map {
+            Stock(from: $0)
+        }
+    }
+    
+    func addFavouriteStock(_ stock: Stock) {
+        CoreDataManager.shared.saveInBackground { (context) in
+           _ = StockDB(from: stock, in: context)
+        }
+    }
+    
+    func removeFavouriteStock() {
+        
+    }
+    
+    func updateFavouriteStock() {
+        
     }
 }
 
