@@ -7,7 +7,22 @@
 
 import Foundation
 
-struct Stock: Decodable {
+struct Stock {
     var ticker: String
     var name: String
+    var isGrowth : Bool?
+    var price: Double?
+    var change: String?
 }
+
+struct mobiumResponce: Decodable {
+    var quotes: [mobiumStock]
+}
+
+struct mobiumStock: Decodable {
+    var symbol: String
+    var longName: String
+    var regularMarketPrice: Double
+    var regularMarketChangePercent: Double
+}
+

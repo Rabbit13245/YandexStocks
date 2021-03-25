@@ -58,6 +58,12 @@ class StocksViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        
+        tableViewDataSource.configure { [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
     }
     
     // MARK: - Private methods
