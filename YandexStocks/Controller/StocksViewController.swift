@@ -7,15 +7,35 @@
 
 import UIKit
 
+enum StockSegments {
+    case favourite
+    case trend
+}
+
 class StocksViewController: UIViewController {
 
     // MARK: - Private properties
     private let segments = ["Stocks", "Favourite"]
     private let cellId = "StockCellId"
-    private var currentSegment = 0
+    private var currentVisibleData: StockSegments = .trend
+    private var currentSegment = 0 {
+        didSet {
+            if currentSegment == 0 {
+                currentVisibleData = .trend
+            } else {
+                currentVisibleData = .favourite
+            }
+        }
+    }
+    
+    private var searchBarIsEmpty: Bool {
+        guard let text = searchController.searchBar.text else { return false }
+        return text.isEmpty
+    }
     
     let tableViewDelegate = StocksTableViewDelegate()
     let tableViewDataSource = StocksTableViewDataSource()
+    let tableStocksData = TableStocksData()
     
     // MARK: - UI
     private lazy var stockHeader: StockHeaderView = {
@@ -29,7 +49,7 @@ class StocksViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UINib(nibName: String(describing: StockTableViewCell.self), bundle: nil), forCellReuseIdentifier: StockTableViewCell.identifier)
+        tableView.register(UINib(nibName: String(describing: StockTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: StockTableViewCell.self))
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
@@ -40,14 +60,18 @@ class StocksViewController: UIViewController {
         return tableView
     }()
     
-    private var searchController: UISearchController = {
+    private lazy var searchController: UISearchController = {
         let searchController = UISearchController()
         searchController.searchBar.placeholder = "Find company or ticker"
-        
+        searchController.searchBar.delegate = self
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = true
+        searchController.hidesNavigationBarDuringPresentation = true
+        definesPresentationContext = true
         return searchController
     }()
     
-    lazy var titleStackView: UIStackView = {
+    private lazy var titleStackView: UIStackView = {
         let titleLabel = UILabel()
         titleLabel.text = "Yandex school"
         titleLabel.backgroundColor = .clear
@@ -68,22 +92,30 @@ class StocksViewController: UIViewController {
         return stackView
     }()
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         
-        tableViewDataSource.configure { [weak self] in
+        configureData()
+        
+    }
+    
+    // MARK: - Public methods
+    func changeFavourite(_ cell: StockTableViewCell) {
+        tableStocksData.changeFavourite(cell)
+    }
+    
+    // MARK: - Private methods
+    private func configureData() {
+        tableViewDataSource.stocksData = tableStocksData
+        tableViewDataSource.currentVC = self
+        
+        tableStocksData.asyncUpdateData = {[weak self] in
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
         }
-        
-        loadData()
-    }
-    
-    // MARK: - Private methods
-    private func loadData() {
-        
     }
     
     private func setupView() {
@@ -110,6 +142,30 @@ class StocksViewController: UIViewController {
     
     private func valueChanged(_ value: Int) {
         currentSegment = value
-        tableViewDataSource.changeView(currentSegment)
+        tableStocksData.changeVisibleStocks(currentVisibleData)
+        tableView.reloadData()
+    }
+}
+
+extension StocksViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        tableViewDataSource.isSearch = true
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        stockHeader.segControlEnabled = false
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        tableViewDataSource.isSearch = false
+        stockHeader.segControlEnabled = true
+    }
+}
+
+extension StocksViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let query = searchController.searchBar.text {
+            tableStocksData.search(query)
+        }
     }
 }

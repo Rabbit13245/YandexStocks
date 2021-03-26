@@ -10,7 +10,11 @@ import UIKit
 class StockHeaderView: UIView {
     // MARK: - Public
     var valueChangedCallback: ((Int) -> Void)?
-    
+    var segControlEnabled = true {
+        didSet {
+            segmentedControl.isEnabled = segControlEnabled
+        }
+    }
     // MARK: - Private
     private var segments: [String]
     

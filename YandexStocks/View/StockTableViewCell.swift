@@ -6,10 +6,15 @@
 //
 
 import UIKit
+import Kingfisher
 
 class StockTableViewCell: UITableViewCell {
-
-    public static let identifier = "StockCellId"
+    
+    private(set) var stockTicker: String? {
+        didSet {
+            ticker.text = stockTicker
+        }
+    }
 
     public var favouriteButtonPressed: ((StockTableViewCell) -> Void)?
     
@@ -33,8 +38,6 @@ class StockTableViewCell: UITableViewCell {
         }
     }
     
-    private(set) var model: Stock?
-    
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var logo: UIImageView!
     @IBOutlet weak var ticker: UILabel!
@@ -46,6 +49,14 @@ class StockTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupView()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        stockTicker = nil
+        favouriteButtonPressed = nil
+        isFavourite = false
+        logo.image = UIImage(systemName: "banknote")
     }
     
     // MARK: - Actions
@@ -64,12 +75,17 @@ extension StockTableViewCell: IConfigurableView {
     typealias IConfigurationModel = Stock
     
     func configure(with model: IConfigurationModel) {
+        stockTicker = model.ticker
+        
         name.text = model.name
-        ticker.text = model.ticker
         currentPrice.text = "$" + String(format: "%.2f", model.price)
         delta.text = model.change
         delta.textColor = model.isGrowth ? Color.accentGreen : Color.accentRed
+        isFavourite = model.isFavourite
         
-        self.model = model
+        if let logoUrlString = model.logoUrl,
+           let logoUrl = URL(string: logoUrlString) {
+            logo.kf.setImage(with: logoUrl)
+        }
     }
 }

@@ -14,10 +14,11 @@ public class StockDB: NSManagedObject {
     convenience init(from model: Stock, in context: NSManagedObjectContext) {
         self.init(context: context)
         
-        ticker = model.ticker
+        ticker = model.ticker.uppercased()
         name = model.name
         price = model.price
         isGrowth = model.isGrowth
         change = model.change
+        logoUrl = model.logoUrl
     }
 }

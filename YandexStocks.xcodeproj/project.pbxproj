@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		848617AC260DF4E500466CE3 /* TableStocksData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848617AB260DF4E500466CE3 /* TableStocksData.swift */; };
 		8492712C260C6E71000C89A2 /* trendStocks.json in Resources */ = {isa = PBXBuildFile; fileRef = 8492712B260C6E71000C89A2 /* trendStocks.json */; };
 		8492712F260C70EB000C89A2 /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8492712E260C70EB000C89A2 /* RequestFactory.swift */; };
 		84927133260C9B40000C89A2 /* StockHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84927132260C9B40000C89A2 /* StockHeaderView.swift */; };
@@ -28,9 +29,12 @@
 		849D14B62609E9860000290A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 849D14B52609E9860000290A /* Main.storyboard */; };
 		849D14BB2609E9CE0000290A /* StocksTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14BA2609E9CE0000290A /* StocksTableViewDataSource.swift */; };
 		849D14BE2609EA920000290A /* StocksTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D14BD2609EA920000290A /* StocksTableViewDelegate.swift */; };
+		BECBFB7FE3079C09C4114F56 /* Pods_YandexStocks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 647F561F51B54AF2B3F5F1F8 /* Pods_YandexStocks.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		647F561F51B54AF2B3F5F1F8 /* Pods_YandexStocks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YandexStocks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		848617AB260DF4E500466CE3 /* TableStocksData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableStocksData.swift; sourceTree = "<group>"; };
 		8492712B260C6E71000C89A2 /* trendStocks.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = trendStocks.json; sourceTree = "<group>"; };
 		8492712E260C70EB000C89A2 /* RequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory.swift; sourceTree = "<group>"; };
 		84927132260C9B40000C89A2 /* StockHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockHeaderView.swift; sourceTree = "<group>"; };
@@ -54,6 +58,8 @@
 		849D14B52609E9860000290A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		849D14BA2609E9CE0000290A /* StocksTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksTableViewDataSource.swift; sourceTree = "<group>"; };
 		849D14BD2609EA920000290A /* StocksTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksTableViewDelegate.swift; sourceTree = "<group>"; };
+		9FE96C15C8CBF222161D523D /* Pods-YandexStocks.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YandexStocks.debug.xcconfig"; path = "Target Support Files/Pods-YandexStocks/Pods-YandexStocks.debug.xcconfig"; sourceTree = "<group>"; };
+		CC241151DB367790E554CBEB /* Pods-YandexStocks.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YandexStocks.release.xcconfig"; path = "Target Support Files/Pods-YandexStocks/Pods-YandexStocks.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,12 +67,32 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BECBFB7FE3079C09C4114F56 /* Pods_YandexStocks.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		687A32687909234300DDDE1D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9FE96C15C8CBF222161D523D /* Pods-YandexStocks.debug.xcconfig */,
+				CC241151DB367790E554CBEB /* Pods-YandexStocks.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		848617B0260DF50200466CE3 /* StocksTableVC */ = {
+			isa = PBXGroup;
+			children = (
+				848617AB260DF4E500466CE3 /* TableStocksData.swift */,
+				849D14BD2609EA920000290A /* StocksTableViewDelegate.swift */,
+				849D14BA2609E9CE0000290A /* StocksTableViewDataSource.swift */,
+			);
+			path = StocksTableVC;
+			sourceTree = "<group>";
+		};
 		84927144260CC7D7000C89A2 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +107,8 @@
 			children = (
 				849D147A2609D7CB0000290A /* YandexStocks */,
 				849D14792609D7CB0000290A /* Products */,
+				687A32687909234300DDDE1D /* Pods */,
+				A4D19B69AD92B8B445621807 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,10 +137,9 @@
 		849D14942609D95C0000290A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				848617B0260DF50200466CE3 /* StocksTableVC */,
 				84927144260CC7D7000C89A2 /* CoreData */,
 				849D14AC2609E4B70000290A /* Stock.swift */,
-				849D14BA2609E9CE0000290A /* StocksTableViewDataSource.swift */,
-				849D14BD2609EA920000290A /* StocksTableViewDelegate.swift */,
 				849BA763260A0AEF00F79F05 /* Network.swift */,
 				849BA766260A0DF200F79F05 /* StocksManager.swift */,
 				8492712E260C70EB000C89A2 /* RequestFactory.swift */,
@@ -152,6 +179,14 @@
 			path = Recources;
 			sourceTree = "<group>";
 		};
+		A4D19B69AD92B8B445621807 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				647F561F51B54AF2B3F5F1F8 /* Pods_YandexStocks.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -159,9 +194,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 849D148C2609D7CC0000290A /* Build configuration list for PBXNativeTarget "YandexStocks" */;
 			buildPhases = (
+				BF71DEAF92B43DF7A0A2567E /* [CP] Check Pods Manifest.lock */,
 				849D14742609D7CB0000290A /* Sources */,
 				849D14752609D7CB0000290A /* Frameworks */,
 				849D14762609D7CB0000290A /* Resources */,
+				3B6DA208450024DCDE12E912 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -219,6 +256,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3B6DA208450024DCDE12E912 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-YandexStocks/Pods-YandexStocks-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-YandexStocks/Pods-YandexStocks-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-YandexStocks/Pods-YandexStocks-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BF71DEAF92B43DF7A0A2567E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-YandexStocks-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		849D14742609D7CB0000290A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -228,6 +307,7 @@
 				849D14B12609E6860000290A /* StocksViewController.swift in Sources */,
 				849D14AA2609E4820000290A /* IConfigurableView.swift in Sources */,
 				849D147C2609D7CB0000290A /* AppDelegate.swift in Sources */,
+				848617AC260DF4E500466CE3 /* TableStocksData.swift in Sources */,
 				849D14AD2609E4B70000290A /* Stock.swift in Sources */,
 				84927147260CC7F2000C89A2 /* StockDB+CoreDataClass.swift in Sources */,
 				849D14A32609DD440000290A /* StockTableViewCell.swift in Sources */,
@@ -375,6 +455,7 @@
 		};
 		849D148D2609D7CC0000290A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FE96C15C8CBF222161D523D /* Pods-YandexStocks.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -395,6 +476,7 @@
 		};
 		849D148E2609D7CC0000290A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC241151DB367790E554CBEB /* Pods-YandexStocks.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

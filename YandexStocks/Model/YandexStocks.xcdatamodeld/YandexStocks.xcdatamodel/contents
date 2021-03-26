@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19E266" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="StockDB" representedClassName="StockDB" syncable="YES">
+    <entity name="StockDB" representedClassName=".StockDB" syncable="YES">
         <attribute name="change" attributeType="String"/>
         <attribute name="isGrowth" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="logoUrl" optional="YES" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="price" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="ticker" attributeType="String"/>
@@ -14,6 +15,6 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="StockDB" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="StockDB" positionX="-63" positionY="-18" width="128" height="133"/>
     </elements>
 </model>

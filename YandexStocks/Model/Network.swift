@@ -22,7 +22,7 @@ class MobiumParser: IParser {
     typealias Model = [Stock]
     
     func parse(data: Data) -> [Stock]? {
-        guard let mobiumResponce = try? JSONDecoder().decode(mobiumResponce.self, from: data) else {
+        guard let mobiumResponce = try? JSONDecoder().decode(MobiumResponce.self, from: data) else {
             return nil
         }
 
@@ -40,6 +40,31 @@ class MobiumParser: IParser {
                          price: $0.regularMarketPrice,
                          change: change)
         }
+    }
+}
+
+class FinnhubStocksParser: IParser {
+    typealias Model = [Stock]
+    
+    func parse(data: Data) -> [Stock]? {
+        return nil
+    }
+}
+
+class FinnhubPriceParser: IParser {
+    typealias Model = String
+    
+    func parse(data: Data) -> String? {
+        return nil
+    }
+}
+
+class FinnhubLogoParser: IParser {
+    typealias Model = String
+    
+    func parse(data: Data) -> String? {
+        guard let logoResponse = try? JSONDecoder().decode(FinnhubLogoResponse.self, from: data) else { return nil }
+        return logoResponse.logo
     }
 }
 
@@ -82,6 +107,7 @@ class NetworkManager {
             }
             
             guard let result = request.parser.parse(data: data) else {
+                print(url)
                 return completionHandler(.failure(.parseError))
             }
             

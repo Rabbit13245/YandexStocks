@@ -21,6 +21,7 @@ extension StockDB {
     @NSManaged public var price: Double
     @NSManaged public var change: String
     @NSManaged public var isGrowth: Bool
+    @NSManaged public var logoUrl: String?
 
 }
 
