@@ -15,7 +15,7 @@ class TableStocksData {
     
     var currentVisibleStocks = [Stock]()
     var searchResultStocks = [Stock]()
-    
+    var isSearch: Bool = false
     var trendStocks = [Stock]() {
         didSet {
             //checkFavourite()
@@ -68,22 +68,37 @@ class TableStocksData {
     }
     
     func search(_ query: String) {
-//        var dataForSearch = currentVisibleStocks
-//        switch currentVisibleData {
-//        case .favourite:
-//            
-//        case .trend:
-//            
-//        }
-        
-        if query.isEmpty {
-            searchResultStocks = currentVisibleStocks
-        } else {
-            searchResultStocks = currentVisibleStocks.filter {$0.name.lowercased().contains(query.lowercased()) ||
-                $0.ticker.uppercased().contains(query.uppercased())}
+        guard isSearch else {
+            switch currentVisibleData {
+            case .favourite:
+                currentVisibleStocks = favouriteStocks
+            case .trend:
+                currentVisibleStocks = trendStocks
+            }
+            asyncUpdateData?()
+            return
         }
         
+        currentVisibleStocks.removeAll()
+        let findedItems = trendStocks.filter{
+            $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
+        
+        for i in Range(0...4) {
+            if i <= findedItems.count - 1 {
+                let stock = findedItems[i]
+                currentVisibleStocks.append(stock)
+            } else {
+                break
+            }
+        }
         asyncUpdateData?()
+    }
+    
+    func getStock(by index: Int) -> Stock? {
+        guard index < currentVisibleStocks.count else {
+            return nil
+        }
+        return currentVisibleStocks[index]
     }
     
     // MARK: - Private
@@ -107,7 +122,7 @@ class TableStocksData {
         let favSet = Set(favouriteStocks)
         let trendSet = Set(trendStocks)
         let stocksForUpdate = favSet.intersection(trendSet)
-        trendStocks.forEach{
+        trendStocks.forEach {
             if stocksForUpdate.contains($0) {
                 $0.isFavourite = true
             }

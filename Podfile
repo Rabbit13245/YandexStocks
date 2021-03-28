@@ -7,5 +7,5 @@ target 'YandexStocks' do
 
   # Pods for YandexStocks
   pod 'Kingfisher', '~> 6.0'
-  pod 'Alamofire', '~> 5.2'
+  pod 'Charts'
 end

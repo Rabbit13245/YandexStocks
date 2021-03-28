@@ -15,6 +15,7 @@ class Stock: Hashable {
     var name: String
     var isGrowth: Bool
     var price: Double
+    var previousPrice: Double?
     var change: String
     var isFavourite: Bool = false
     var logoUrl: String?
@@ -65,7 +66,34 @@ class Stock: Hashable {
     }
     
     func getData() {
-        
+        let stockManager = StocksManager()
+        stockManager.getPrices(for: ticker) {[weak self] (result) in
+            switch result {
+            case .failure:
+                print("Error update price for \(String(describing: self?.ticker))")
+            case .success(let data):
+                guard let safeData = data else { return }
+                self?.price = safeData.0
+                self?.previousPrice = safeData.1
+                self?.isGrowth = safeData.0 >= safeData.1
+                if let change = self?.calculateChange() {
+                    self?.change = change
+                }
+            }
+        }
+    }
+    
+    private func calculateChange() -> String {
+        guard let previousPrice = previousPrice else { return "" }
+        let percent = previousPrice / 100
+        var curGrow = price / percent
+        if isGrowth {
+            curGrow = curGrow - 100
+            return  "+$\(String(format: "%.2f", price - previousPrice)) (\(String(format: "%.2f", curGrow))%)"
+        } else {
+            curGrow = 100 - curGrow
+            return "-$\(String(format: "%.2f", previousPrice - price)) (\(String(format: "%.2f", curGrow))%)"
+        }
     }
 }
 
@@ -81,7 +109,34 @@ struct MobiumStock: Decodable {
     var regularMarketChange: Double
 }
 
-struct FinnhubLogoResponse: Decodable {
+struct FinnhubCompanyResponse: Decodable {
     var logo: String
+    var country: String
+    var currency: String
+    var exchange: String
+    var marketCapitalization: Int
+    var weburl: String
+    var phone: String
+}
+
+struct FinnhubPriceResponse: Decodable {
+    var o: Double
+    var h: Double
+    var l: Double
+    var c: Double
+    var pc: Double
+}
+
+struct FinnhubNewsResponse: Decodable {
+    var datetime: Int
+    var headline: String
+    var image: String
+    var source: String
+    var url: String
+}
+
+struct FinnhubChartDataResponce: Decodable {
+    var t: [Int]
+    var c: [Double]
 }
 

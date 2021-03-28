@@ -28,11 +28,6 @@ class StocksViewController: UIViewController {
         }
     }
     
-    private var searchBarIsEmpty: Bool {
-        guard let text = searchController.searchBar.text else { return false }
-        return text.isEmpty
-    }
-    
     let tableViewDelegate = StocksTableViewDelegate()
     let tableViewDataSource = StocksTableViewDataSource()
     let tableStocksData = TableStocksData()
@@ -52,7 +47,6 @@ class StocksViewController: UIViewController {
         tableView.register(UINib(nibName: String(describing: StockTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: StockTableViewCell.self))
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        tableView.allowsSelection = false
         tableView.dataSource = tableViewDataSource
         tableView.delegate = tableViewDelegate
         
@@ -65,8 +59,7 @@ class StocksViewController: UIViewController {
         searchController.searchBar.placeholder = "Find company or ticker"
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = true
+        searchController.obscuresBackgroundDuringPresentation = false
         definesPresentationContext = true
         return searchController
     }()
@@ -111,6 +104,9 @@ class StocksViewController: UIViewController {
         tableViewDataSource.stocksData = tableStocksData
         tableViewDataSource.currentVC = self
         
+        tableViewDelegate.stocksData = tableStocksData
+        tableViewDelegate.vc = self
+        
         tableStocksData.asyncUpdateData = {[weak self] in
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
@@ -149,15 +145,20 @@ class StocksViewController: UIViewController {
 
 extension StocksViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        tableViewDataSource.isSearch = true
+        tableStocksData.isSearch = true
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         stockHeader.segControlEnabled = false
     }
     
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        tableViewDataSource.isSearch = false
+//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+//        isSearch = false
+//        stockHeader.segControlEnabled = true
+//    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        tableStocksData.isSearch = false
         stockHeader.segControlEnabled = true
     }
 }

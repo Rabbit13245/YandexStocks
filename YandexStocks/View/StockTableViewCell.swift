@@ -62,6 +62,17 @@ class StockTableViewCell: UITableViewCell {
     // MARK: - Actions
     @IBAction func favouriteButtonPressed(_ sender: UIButton) {
         favouriteButtonPressed?(self)
+        
+        sender.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        UIView.animate(withDuration: 0.2,
+          delay: 0,
+          usingSpringWithDamping: 0.2,
+          initialSpringVelocity: 6.0,
+          options: .allowUserInteraction,
+          animations: {
+            sender.transform = .identity
+          },
+          completion: nil)
     }
     
     // MARK: - Private

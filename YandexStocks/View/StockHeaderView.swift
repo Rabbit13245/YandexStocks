@@ -44,7 +44,7 @@ class StockHeaderView: UIView {
     // MARK: - Private methods
     private func setupView() {
         addSubview(segmentedControl)
-        
+        backgroundColor = UIColor.systemBackground
         NSLayoutConstraint.activate([
             segmentedControl.leadingAnchor.constraint(equalTo: leadingAnchor),
             segmentedControl.trailingAnchor.constraint(equalTo: trailingAnchor),
