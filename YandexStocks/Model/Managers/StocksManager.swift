@@ -164,15 +164,28 @@ class StocksManager: IStocksManager {
         print(text)
         
         //tickers.insert(ticker)
-        socket?.write(string: text)
+        if isWebsocketConnected {
+            socket?.connect()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.socket?.write(string: text)
+            }
+        } else {
+            socket?.write(string: text)
+        }
     }
     
     func unsubscribeStock(with ticker: String) {
 //        if tickers.contains(ticker) {
 //            tickers.remove(ticker)
 //        }
-        
-        socket?.write(string: "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}")
+        if isWebsocketConnected {
+            socket?.connect()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.socket?.write(string: "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}")
+            }
+        } else {
+            socket?.write(string: "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}")
+        }
     }
     
     // MARK: - Private
@@ -211,16 +224,16 @@ extension StocksManager: WebSocketDelegate {
         case .connected(let headers):
             isWebsocketConnected = true
             print("websocket is connected: \(headers)")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                for item in self.tickersForAdd {
-                    self.unsubscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
-                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                for item in self.tickersForAdd {
-                    self.subscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
-                }
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                for item in self.tickersForAdd {
+//                    self.unsubscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
+//                }
+//            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                for item in self.tickersForAdd {
+//                    self.subscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
+//                }
+//            }
 
         case .disconnected(let reason, let code):
             isWebsocketConnected = false
