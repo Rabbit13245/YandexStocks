@@ -22,6 +22,12 @@ class StocksManager: IStocksManager {
     init() {
         prepareForWebsockets()
         subscribeStock(with: "AAPL")
+        
+        subscriveBackground()
+    }
+    
+    deinit {
+        unsubscribeBackground()
     }
     
     /// Получить трендовые акции для отображения на первой вкладке
@@ -167,6 +173,24 @@ class StocksManager: IStocksManager {
         socket = WebSocket(request: request)
         socket?.delegate = self
         socket?.connect()
+    }
+    
+    private func subscriveBackground() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
+    private func unsubscribeBackground() {
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
+    @objc private func appMovedToForeground() {
+        guard let socket = socket else {
+            print("Socker error")
+            return
+        }
+        if !isWebsocketConnected {
+            socket.connect()
+        }
     }
 }
 
