@@ -78,7 +78,7 @@ class StockTableViewCell: UITableViewCell {
     // MARK: - Private
     private func setupView() {
         bgView.layer.cornerRadius = 16
-        logo.layer.cornerRadius = 12
+        logo.layer.cornerRadius = 5
     }
 }
 

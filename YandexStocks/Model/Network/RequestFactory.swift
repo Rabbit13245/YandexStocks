@@ -8,7 +8,7 @@
 import Foundation
 
 class RequestFactory {
-    private static let mboumToken = "M5VTjpNUTaMyYISvj7ScDjgPEx2QREZIuNNyIogUBjO0JlVzazEZiGuUWDEd"
+    private static let mboumToken = "yYJvQtsAIR9Dt894Ztg6mfAyt4OHVKQhnJdVzsosTzPTUx98XFPLeGxUzHnQ"
     private static let mboumTrendUrlString = "https://mboum.com/api/v1/co/collections/?list=most_actives&start=1&apikey="
    
     private static let iexapisToken = "token=pk_2b9abbcc4e2d4f3188ec43a577ad3651"

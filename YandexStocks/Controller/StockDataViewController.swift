@@ -17,6 +17,7 @@ enum StockDataSegments {
 
 class StockDataViewController: UIViewController {
 
+    private var banner: StatusBarNotificationBanner?
     private let segments = ["News", "Summary", "Charts"]
     private let chartSegments = ["Week", "Month", "Year"]
     private var stock: Stock
@@ -165,8 +166,9 @@ class StockDataViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.stopLoading()
                 if !result {
-                    let banner = StatusBarNotificationBanner(title: "Error fetching news", style: .danger)
-                    banner.show()
+                    self?.banner?.dismiss()
+                    self?.banner = StatusBarNotificationBanner(title: "Error fetching news", style: .danger)
+                    self?.banner?.show()
                 }
             }
         }
@@ -199,8 +201,9 @@ class StockDataViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.stopLoading()
                 if !result {
-                    let banner = StatusBarNotificationBanner(title: "Error fetching company info", style: .danger)
-                    banner.show()
+                    self?.banner?.dismiss()
+                    self?.banner = StatusBarNotificationBanner(title: "Error fetching company info", style: .danger)
+                    self?.banner?.show()
                 }
             }
         }
@@ -232,8 +235,9 @@ class StockDataViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.stopLoading()
                 if !result {
-                    let banner = StatusBarNotificationBanner(title: "Error fetching chart data", style: .danger)
-                    banner.show()
+                    self?.banner?.dismiss()
+                    self?.banner = StatusBarNotificationBanner(title: "Error fetching chart data", style: .danger)
+                    self?.banner?.show()
                 }
             }
         }

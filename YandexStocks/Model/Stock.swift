@@ -122,7 +122,7 @@ struct FinnhubCompanyResponse: Decodable {
     var country: String
     var currency: String
     var exchange: String
-    var marketCapitalization: Int
+    var marketCapitalization: Double
     var weburl: String
     var phone: String
 }
@@ -146,4 +146,14 @@ struct FinnhubNewsResponse: Decodable {
 struct FinnhubChartDataResponce: Decodable {
     var t: [Int]
     var c: [Double]
+}
+
+struct FinnhubWebsocketResponse: Decodable {
+    var data: [FinnhubWebsocketItemResponse]
+    var type: String
+}
+
+struct FinnhubWebsocketItemResponse: Decodable {
+    var s: String
+    var p: Double
 }

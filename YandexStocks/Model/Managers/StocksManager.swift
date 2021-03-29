@@ -18,11 +18,10 @@ class StocksManager: IStocksManager {
     private let networkManager = NetworkManager()
     private var isWebsocketConnected = false
     private var socket: WebSocket?
+    private var tickersForAdd = Set<String>()
     
     init() {
         prepareForWebsockets()
-        subscribeStock(with: "AAPL")
-        
         subscriveBackground()
     }
     
@@ -32,31 +31,31 @@ class StocksManager: IStocksManager {
     
     /// Получить трендовые акции для отображения на первой вкладке
     func getStocksTrend(completion: @escaping (Result<[Stock], ManagerError>) -> Void) {
-        //getTrendStocksRequest
-        guard let request = RequestFactory.getFakeTrendStocksRequest() else {
+        //getFakeTrendStocksRequest
+        guard let request = RequestFactory.getTrendStocksRequest() else {
             completion(.failure(.error))
             return
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.networkManager.makeRequest(request) { (result) in
-                switch result {
-                case .failure:
-                    completion(.failure(.error))
-                case .success(let data):
-                    completion(.success(data))
-                }
-            }
-        }
-        
-//        networkManager.makeRequest(request) { (result) in
-//            switch result {
-//            case .failure:
-//                completion(.failure(.error))
-//            case .success(let data):
-//                completion(.success(data))
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+//            self.networkManager.makeRequest(request) { (result) in
+//                switch result {
+//                case .failure:
+//                    completion(.failure(.error))
+//                case .success(let data):
+//                    completion(.success(data))
+//                }
 //            }
 //        }
+        
+        networkManager.makeRequest(request) { (result) in
+            switch result {
+            case .failure:
+                completion(.failure(.error))
+            case .success(let data):
+                completion(.success(data))
+            }
+        }
     }
     
     /// Получить сохраненные избранные акции для второй вкладки
@@ -68,6 +67,7 @@ class StocksManager: IStocksManager {
             let stock = Stock(from: $0)
             stock.isFavourite = true
             stock.getData()
+            tickersForAdd.insert(stock.ticker)
             return stock
         }
     }
@@ -126,6 +126,7 @@ class StocksManager: IStocksManager {
     
     /// Добавить избранную акцию в кордату
     func addFavouriteStock(_ stock: Stock) {
+        subscribeStock(with: stock.ticker)
         CoreDataManager.shared.saveInBackground { (context) in
            _ = StockDB(from: stock, in: context)
         }
@@ -133,6 +134,7 @@ class StocksManager: IStocksManager {
     
     /// Удалить избранную акцию из кордаты
     func removeFavouriteStock(_ stock: Stock) {
+        unsubscribeStock(with: stock.ticker)
         let predicate = NSPredicate(format: "ticker == %@", stock.ticker.uppercased())
         guard let stocksForRemove = CoreDataManager.shared.fetchEntities(withName: String(describing: StockDB.self), withPredicate: predicate)
         else { return }
@@ -158,19 +160,28 @@ class StocksManager: IStocksManager {
     }
     
     func subscribeStock(with ticker: String) {
-        socket?.write(string: "{'type':'subscribe','symbol':'\(ticker)'}")
+        let text = "{\"type\":\"subscribe\",\"symbol\":\"\(ticker)\"}"
+        print(text)
+        
+        //tickers.insert(ticker)
+        socket?.write(string: text)
     }
     
     func unsubscribeStock(with ticker: String) {
-        socket?.write(string: "{'type':'unsubscribe','symbol':'\(ticker)'}")
+//        if tickers.contains(ticker) {
+//            tickers.remove(ticker)
+//        }
+        
+        socket?.write(string: "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}")
     }
     
     // MARK: - Private
     private func prepareForWebsockets() {
         guard let url = RequestFactory.getFinnhubWebsocketAddress() else { return }
         var request = URLRequest(url: url)
+        let pinner = FoundationSecurity(allowSelfSigned: true)
         request.timeoutInterval = 5
-        socket = WebSocket(request: request)
+        socket = WebSocket(request: request, certPinner: pinner)
         socket?.delegate = self
         socket?.connect()
     }
@@ -200,27 +211,45 @@ extension StocksManager: WebSocketDelegate {
         case .connected(let headers):
             isWebsocketConnected = true
             print("websocket is connected: \(headers)")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                for item in self.tickersForAdd {
+                    self.unsubscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                for item in self.tickersForAdd {
+                    self.subscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
+                }
+            }
+
         case .disconnected(let reason, let code):
             isWebsocketConnected = false
             print("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
             print("Received text: \(string)")
-            stockPriceUpdateCallback?("AAPL", Double(Int.random(in: 150..<250)))
+            guard let data = try? JSONDecoder().decode(FinnhubWebsocketResponse.self, from: Data(string.utf8)),
+                  let price = data.data.first?.p,
+                  let ticker = data.data.first?.s else {
+                print("error while decoding websocket answer")
+                return
+            }
+            stockPriceUpdateCallback?(ticker, price)
         case .binary(let data):
             print("Received data: \(data.count)")
         case .ping:
-            break
+            print("ping")
         case .pong:
-            break
+            print("pong")
         case .viabilityChanged:
-            break
+            print("viabilityChanged")
         case .reconnectSuggested:
-            break
+            print("reconnectSuggested")
         case .cancelled:
             isWebsocketConnected = false
         case .error(let error):
             isWebsocketConnected = false
             print("ERROR WEBSOCKET!!! \(String(describing: error))")
+            NotificationCenter.default.post(name: Notification.Name("WebsocketsError"), object: nil)
         }
     }
 }

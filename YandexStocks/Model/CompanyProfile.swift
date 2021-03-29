@@ -11,7 +11,7 @@ struct CompanyProfile {
     var country: String
     var currency: String
     var exchange: String
-    var marketCapitalization: Int
+    var marketCapitalization: Double
     var weburl: String
     var phone: String
     

@@ -16,6 +16,7 @@ enum StockSegments {
 class StocksViewController: UIViewController {
 
     // MARK: - Private properties
+    private var banner: StatusBarNotificationBanner?
     private let segments = ["Stocks", "Favourite"]
     private let cellId = "StockCellId"
     private var currentVisibleData: StockSegments = .trend
@@ -95,6 +96,8 @@ class StocksViewController: UIViewController {
         setupView()
         
         configureData()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(webSocketError), name: Notification.Name("WebsocketsError"), object: nil)
     }
     
     // MARK: - Public methods
@@ -103,6 +106,11 @@ class StocksViewController: UIViewController {
     }
     
     // MARK: - Private methods
+    @objc private func webSocketError() {
+        banner?.dismiss()
+        banner = StatusBarNotificationBanner(title: "Error websockets. Remove fav stocks and restart the app", style: .danger)
+        banner?.show()
+    }
     private func configureData() {
         tableViewDataSource.stocksData = tableStocksData
         tableViewDataSource.currentVC = self
@@ -119,8 +127,9 @@ class StocksViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.stopLoading()
                 if !result {
-                    let banner = StatusBarNotificationBanner(title: "Error fetching stocks. Restart the app", style: .danger)
-                    banner.show()
+                    self?.banner?.dismiss()
+                    self?.banner = StatusBarNotificationBanner(title: "Error fetching stocks. Restart the app", style: .danger)
+                    self?.banner?.show()
                 }
             }
         }
