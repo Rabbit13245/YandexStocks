@@ -10,4 +10,5 @@ target 'YandexStocks' do
   pod 'Charts'
   pod 'NotificationBannerSwift', '~> 3.0.0'
   pod 'Starscream', '~> 4.0.0'
+  pod 'SwiftLint'
 end

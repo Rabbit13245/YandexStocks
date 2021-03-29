@@ -55,7 +55,7 @@ class StockHeaderView: UIView {
             segmentedControl.leadingAnchor.constraint(equalTo: leadingAnchor),
             segmentedControl.trailingAnchor.constraint(equalTo: trailingAnchor),
             segmentedControl.topAnchor.constraint(equalTo: topAnchor),
-            segmentedControl.bottomAnchor.constraint(equalTo: bottomAnchor),
+            segmentedControl.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     

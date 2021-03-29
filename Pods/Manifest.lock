@@ -9,12 +9,14 @@ PODS:
     - SnapKit (~> 5.0.1)
   - SnapKit (5.0.1)
   - Starscream (4.0.4)
+  - SwiftLint (0.40.3)
 
 DEPENDENCIES:
   - Charts
   - Kingfisher (~> 6.0)
   - NotificationBannerSwift (~> 3.0.0)
   - Starscream (~> 4.0.0)
+  - SwiftLint
 
 SPEC REPOS:
   trunk:
@@ -24,6 +26,7 @@ SPEC REPOS:
     - NotificationBannerSwift
     - SnapKit
     - Starscream
+    - SwiftLint
 
 SPEC CHECKSUMS:
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
@@ -32,7 +35,8 @@ SPEC CHECKSUMS:
   NotificationBannerSwift: 7021be2338f8f29cf424b0aca43da462bf9e2a1a
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
+  SwiftLint: dfd554ff0dff17288ee574814ccdd5cea85d76f7
 
-PODFILE CHECKSUM: 6c9103a4e078e3ae074522c55e83365ab2638b8b
+PODFILE CHECKSUM: e7fb3d2cb9c102ba5f47a126bb050a29e54b8f2c
 
 COCOAPODS: 1.10.0

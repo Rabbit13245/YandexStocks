@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension StockDB {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<StockDB> {
@@ -22,9 +21,4 @@ extension StockDB {
     @NSManaged public var change: String
     @NSManaged public var isGrowth: Bool
     @NSManaged public var logoUrl: String?
-
-}
-
-extension StockDB : Identifiable {
-
 }

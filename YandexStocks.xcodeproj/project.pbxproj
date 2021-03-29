@@ -332,6 +332,7 @@
 				849D14752609D7CB0000290A /* Frameworks */,
 				849D14762609D7CB0000290A /* Resources */,
 				3B6DA208450024DCDE12E912 /* [CP] Embed Pods Frameworks */,
+				846422F72611AD0C00AA1E3C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -408,6 +409,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-YandexStocks/Pods-YandexStocks-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		846422F72611AD0C00AA1E3C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
 		};
 		BF71DEAF92B43DF7A0A2567E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

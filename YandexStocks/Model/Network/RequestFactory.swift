@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class RequestFactory {
     private static let mboumToken = "M5VTjpNUTaMyYISvj7ScDjgPEx2QREZIuNNyIogUBjO0JlVzazEZiGuUWDEd"
     private static let mboumTrendUrlString = "https://mboum.com/api/v1/co/collections/?list=most_actives&start=1&apikey="
@@ -34,7 +33,6 @@ class RequestFactory {
         
         return Request(url: url, parser: MobiumParser())
     }
-    
     
     static func getAllStocksRequest() -> Request<FinnhubStocksParser>? {
         let url = URL(string: "\(finnhubAllStocksUrlString)\(finnhubToken)")

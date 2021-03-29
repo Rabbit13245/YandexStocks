@@ -54,7 +54,7 @@ class StocksManager: IStocksManager {
     }
     
     /// Получить массив всех акций для поиска
-    func getAllStocksForSearch(completion: @escaping (Result<[Stock], ManagerError>) -> Void) -> Void {
+    func getAllStocksForSearch(completion: @escaping (Result<[Stock], ManagerError>) -> Void) {
         guard let request = RequestFactory.getAllStocksRequest() else {
             completion(.failure(.error))
             return
@@ -145,33 +145,31 @@ class StocksManager: IStocksManager {
 extension StocksManager: WebSocketDelegate {
     func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
-            case .connected(let headers):
-                isWebsocketConnected = true
-                print("websocket is connected: \(headers)")
-            case .disconnected(let reason, let code):
-                isWebsocketConnected = false
-                print("websocket is disconnected: \(reason) with code: \(code)")
-            case .text(let string):
-                print("Received text: \(string)")
-            case .binary(let data):
-                print("Received data: \(data.count)")
-            case .ping(_):
-                break
-            case .pong(_):
-                break
-            case .viabilityChanged(_):
-                break
-            case .reconnectSuggested(_):
-                break
-            case .cancelled:
-                isWebsocketConnected = false
-            case .error(let error):
-                isWebsocketConnected = false
-                print("ERROR WEBSOCKET!!! \(error)")
-            }
+        case .connected(let headers):
+            isWebsocketConnected = true
+            print("websocket is connected: \(headers)")
+        case .disconnected(let reason, let code):
+            isWebsocketConnected = false
+            print("websocket is disconnected: \(reason) with code: \(code)")
+        case .text(let string):
+            print("Received text: \(string)")
+        case .binary(let data):
+            print("Received data: \(data.count)")
+        case .ping:
+            break
+        case .pong:
+            break
+        case .viabilityChanged:
+            break
+        case .reconnectSuggested:
+            break
+        case .cancelled:
+            isWebsocketConnected = false
+        case .error(let error):
+            isWebsocketConnected = false
+            print("ERROR WEBSOCKET!!! \(String(describing: error))")
+        }
     }
-    
-    
 }
 enum ManagerError: Error {
     case error

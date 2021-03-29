@@ -14,7 +14,7 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
-    static func -(lhs: Date, rhs: Int) -> Date {
+    static func - (lhs: Date, rhs: Int) -> Date {
         return Calendar.current.date(byAdding: .day, value: -rhs, to: lhs)!
     }
     

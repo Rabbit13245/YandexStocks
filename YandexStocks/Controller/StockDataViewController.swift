@@ -72,7 +72,8 @@ class StockDataViewController: UIViewController {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(UINib(nibName: String(describing: StockNewsTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: StockNewsTableViewCell.self))
-        tableView.register(UINib(nibName: String(describing: CompanyProfileTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: CompanyProfileTableViewCell.self))
+        tableView.register(UINib(nibName: String(describing: CompanyProfileTableViewCell.self), bundle: nil),
+                           forCellReuseIdentifier: String(describing: CompanyProfileTableViewCell.self))
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView(frame: .zero)
@@ -277,18 +278,18 @@ class StockDataViewController: UIViewController {
             
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: stockHeader.bottomAnchor,constant: 8),
+            tableView.topAnchor.constraint(equalTo: stockHeader.bottomAnchor, constant: 8),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             chartsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             chartsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            chartsView.topAnchor.constraint(equalTo: stockHeader.bottomAnchor,constant: 8),
+            chartsView.topAnchor.constraint(equalTo: stockHeader.bottomAnchor, constant: 8),
             chartsView.bottomAnchor.constraint(equalTo: chartFooter.topAnchor),
             
             chartFooter.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             chartFooter.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
             chartFooter.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
-            chartFooter.heightAnchor.constraint(equalToConstant: 44),
+            chartFooter.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
     

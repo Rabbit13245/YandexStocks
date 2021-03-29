@@ -37,11 +37,10 @@ class TableStocksData {
     // MARK: - Public
     func changeFavourite(_ cell: StockTableViewCell) {
         if favouriteStocks.contains(where: { $0.ticker.uppercased() == cell.stockTicker?.uppercased()}),
-           let stockForRemove = favouriteStocks.filter({ $0.ticker.uppercased() == cell.stockTicker?.uppercased()}).first
-        {
+           let stockForRemove = favouriteStocks.filter({ $0.ticker.uppercased() == cell.stockTicker?.uppercased()}).first {
             cell.isFavourite = false
             stocksManager.removeFavouriteStock(stockForRemove)
-            (trendStocks.first{ $0.ticker.uppercased() == cell.stockTicker?.uppercased()})?.isFavourite = false
+            (trendStocks.first { $0.ticker.uppercased() == cell.stockTicker?.uppercased()})?.isFavourite = false
             favouriteStocks = favouriteStocks.filter { $0.ticker.uppercased() != cell.stockTicker?.uppercased() }
             if currentVisibleData == .favourite {
                 currentVisibleStocks = favouriteStocks
@@ -80,7 +79,7 @@ class TableStocksData {
         }
         
         currentVisibleStocks.removeAll()
-        let findedItems = trendStocks.filter{
+        let findedItems = trendStocks.filter {
             $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
         
         for i in Range(0...4) {

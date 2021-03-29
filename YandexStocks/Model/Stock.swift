@@ -88,7 +88,7 @@ class Stock: Hashable {
         let percent = previousPrice / 100
         var curGrow = price / percent
         if isGrowth {
-            curGrow = curGrow - 100
+            curGrow -= 100
             return  "+$\(String(format: "%.2f", price - previousPrice)) (\(String(format: "%.2f", curGrow))%)"
         } else {
             curGrow = 100 - curGrow
@@ -139,4 +139,3 @@ struct FinnhubChartDataResponce: Decodable {
     var t: [Int]
     var c: [Double]
 }
-
