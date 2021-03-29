@@ -8,10 +8,12 @@
 import Foundation
 
 class TableStocksData {
-    
-    var asyncUpdateData: (() -> Void)?
     // MARK: - Dependencies
     private let stocksManager = StocksManager()
+    
+    var asyncUpdateData: (() -> Void)?
+    var fetchingDataCallback: ((Bool) -> Void)?
+    var stockPriceUpdateCallback: ((String, Double) -> Void)?
     
     var currentVisibleStocks = [Stock]()
     var searchResultStocks = [Stock]()
@@ -28,11 +30,6 @@ class TableStocksData {
     }
     
     private var currentVisibleData: StockSegments = .trend
-    
-    // MARK: - Initializers
-    init() {
-        loadData()
-    }
     
     // MARK: - Public
     func changeFavourite(_ cell: StockTableViewCell) {
@@ -100,23 +97,33 @@ class TableStocksData {
         return currentVisibleStocks[index]
     }
     
-    // MARK: - Private
-    private func loadData() {
+    func loadData() {
         favouriteStocks = stocksManager.getSavedFavouriteStocks()
         
         stocksManager.getStocksTrend {[weak self] (result) in
             switch result {
             case .failure:
                 print("error while fetching stocks")
+                self?.fetchingDataCallback?(false)
             case .success(let stocksData):
                 self?.trendStocks = stocksData
                 self?.checkFavourite()
                 self?.currentVisibleStocks = stocksData
                 self?.asyncUpdateData?()
+                self?.fetchingDataCallback?(true)
+                
+//                self?.printAddress(address: (self?.favouriteStocks)!)
+//                self?.printAddress(address: (self?.trendStocks)!)
+//                self?.printAddress(address: (self?.currentVisibleStocks)!)
             }
+        }
+        
+        stocksManager.stockPriceUpdateCallback = {[weak self] (ticker, newPrice) in
+            self?.priceUpdated(ticker: ticker, newPrice: newPrice)
         }
     }
     
+    // MARK: - Private
     private func checkFavourite() {
         let favSet = Set(favouriteStocks)
         let trendSet = Set(trendStocks)
@@ -127,4 +134,21 @@ class TableStocksData {
             }
         }
     }
+    
+    private func priceUpdated(ticker: String, newPrice: Double) {
+        print("\(ticker) - \(newPrice)")
+        guard let cellForUpdate = favouriteStocks.first(where: { $0.ticker == ticker}) else {
+            print("Cant find stock for update")
+            return
+        }
+        cellForUpdate.updatePrice(newPrice: newPrice)
+        stocksManager.updateFavouriteStock(cellForUpdate)
+        if currentVisibleData == .favourite {
+            asyncUpdateData?()
+        }
+    }
+    
+//    private func printAddress(address o: UnsafeRawPointer ) {
+//        print(String(format: "%p", Int(bitPattern: o)))
+//    }
 }

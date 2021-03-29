@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import NotificationBannerSwift
 
 enum StockSegments {
     case favourite
@@ -28,9 +29,9 @@ class StocksViewController: UIViewController {
         }
     }
     
-    let tableViewDelegate = StocksTableViewDelegate()
-    let tableViewDataSource = StocksTableViewDataSource()
-    let tableStocksData = TableStocksData()
+    private lazy var tableViewDelegate = StocksTableViewDelegate()
+    private lazy var tableViewDataSource = StocksTableViewDataSource()
+    private lazy var tableStocksData = TableStocksData()
     
     // MARK: - UI
     private lazy var stockHeader: StockHeaderView = {
@@ -47,9 +48,6 @@ class StocksViewController: UIViewController {
         tableView.register(UINib(nibName: String(describing: StockTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: StockTableViewCell.self))
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        tableView.dataSource = tableViewDataSource
-        tableView.delegate = tableViewDelegate
-        
         tableViewDelegate.headerView = stockHeader
         return tableView
     }()
@@ -85,13 +83,18 @@ class StocksViewController: UIViewController {
         return stackView
     }()
     
+    private lazy var loading: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         
         configureData()
-        
     }
     
     // MARK: - Public methods
@@ -112,6 +115,23 @@ class StocksViewController: UIViewController {
                 self?.tableView.reloadData()
             }
         }
+        tableStocksData.fetchingDataCallback = {[weak self] (result) in
+            DispatchQueue.main.async {
+                self?.stopLoading()
+                if !result {
+                    let banner = StatusBarNotificationBanner(title: "Error fetching stocks. Restart the app", style: .danger)
+                    banner.show()
+                }
+            }
+        }
+        tableStocksData.stockPriceUpdateCallback = {[weak self] (ticker, newPrice) in
+            self?.priceUpdated(ticker: ticker, newPrice: newPrice)
+        }
+        
+        tableStocksData.loadData()
+        startLoading()
+        tableView.dataSource = tableViewDataSource
+        tableView.delegate = tableViewDelegate
     }
     
     private func setupView() {
@@ -123,7 +143,7 @@ class StocksViewController: UIViewController {
         view.backgroundColor = UIColor.systemBackground
 
         view.addSubview(tableView)
-    
+        view.addSubview(loading)
         setupLayout()
     }
     
@@ -132,14 +152,33 @@ class StocksViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            loading.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loading.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+    
+    private func startLoading() {
+        loading.startAnimating()
+        loading.animateHidding(hidding: false)
+        tableView.animateHidding(hidding: true)
+    }
+    
+    private func stopLoading() {
+        loading.stopAnimating()
+        loading.animateHidding(hidding: true)
+        tableView.animateHidding(hidding: false)
     }
     
     private func valueChanged(_ value: Int) {
         currentSegment = value
         tableStocksData.changeVisibleStocks(currentVisibleData)
         tableView.reloadData()
+    }
+    
+    private func priceUpdated(ticker: String, newPrice: Double) {
+        print("\(ticker) - \(newPrice)")
     }
 }
 

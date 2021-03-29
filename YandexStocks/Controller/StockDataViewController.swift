@@ -165,7 +165,7 @@ class StockDataViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.stopLoading()
                 if !result {
-                    let banner = StatusBarNotificationBanner(title: "Error fetching news. Reload", style: .danger)
+                    let banner = StatusBarNotificationBanner(title: "Error fetching news", style: .danger)
                     banner.show()
                 }
             }
@@ -199,7 +199,7 @@ class StockDataViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.stopLoading()
                 if !result {
-                    let banner = StatusBarNotificationBanner(title: "Error fetching company info. Reload", style: .danger)
+                    let banner = StatusBarNotificationBanner(title: "Error fetching company info", style: .danger)
                     banner.show()
                 }
             }
@@ -232,7 +232,7 @@ class StockDataViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.stopLoading()
                 if !result {
-                    let banner = StatusBarNotificationBanner(title: "Error fetching chart data. Reload", style: .danger)
+                    let banner = StatusBarNotificationBanner(title: "Error fetching chart data", style: .danger)
                     banner.show()
                 }
             }
@@ -295,6 +295,7 @@ class StockDataViewController: UIViewController {
     
     private func setupNavigation() {
         navigationItem.backButtonTitle = ""
+        
         let ticker = UILabel()
         ticker.text = stock.ticker
         ticker.font = Font.H3

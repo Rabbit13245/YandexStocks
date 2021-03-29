@@ -18,7 +18,9 @@ class CoreDataManager {
         }
         return instance
     }
-    private init() {}
+    private init() {
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.path)
+    }
     
     // MARK: - Private
     private let modelName = "YandexStocks"
@@ -68,10 +70,14 @@ class CoreDataManager {
     }
     
     func fetchEntities(withName name: String,
-                       withPredicate predicate: NSPredicate? = nil) -> [NSManagedObject]? {
+                       withPredicate predicate: NSPredicate? = nil,
+                       context: NSManagedObjectContext? = nil) -> [NSManagedObject]? {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: name)
         fetchRequest.predicate = predicate
         
-        return try? persistentContainer.viewContext.fetch(fetchRequest)
+        guard let context = context else {
+            return try? persistentContainer.viewContext.fetch(fetchRequest)
+        }
+        return try? context.fetch(fetchRequest)
     }
 }

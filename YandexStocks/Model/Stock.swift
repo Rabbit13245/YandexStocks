@@ -72,15 +72,23 @@ class Stock: Hashable {
             case .failure:
                 print("Error update price for \(String(describing: self?.ticker))")
             case .success(let data):
-                guard let safeData = data else { return }
-                self?.price = safeData.0
-                self?.previousPrice = safeData.1
-                self?.isGrowth = safeData.0 >= safeData.1
-                if let change = self?.calculateChange() {
-                    self?.change = change
-                }
+                guard let safeData = data,
+                      let safeSalf = self else { return }
+                safeSalf.price = safeData.0
+                safeSalf.previousPrice = safeData.1
+                safeSalf.isGrowth = safeData.0 >= safeData.1
+                safeSalf.change = safeSalf.calculateChange()
+                
+                stockManager.updateFavouriteStock(safeSalf)
             }
         }
+    }
+    
+    func updatePrice(newPrice: Double) {
+        isGrowth = newPrice >= price
+        previousPrice = price
+        price = newPrice
+        change = calculateChange()
     }
     
     private func calculateChange() -> String {
