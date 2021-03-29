@@ -11,6 +11,7 @@ class NewsStockData {
     
     // MARK: - Public
     var asyncUpdateData: (() -> Void)?
+    var fetchingDataCallback: ((Bool) -> Void)?
     var news = [News]() {
         didSet {
             asyncUpdateData?()
@@ -26,6 +27,11 @@ class NewsStockData {
     // MARK: - Initializers
     init(ticker: String) {
         self.ticker = ticker
+        //loadData()
+    }
+    
+    // MARK: - Public
+    func reloadData() {
         loadData()
     }
     
@@ -37,7 +43,9 @@ class NewsStockData {
             switch result {
             case .failure:
                 print("error while fetching news")
+                self?.fetchingDataCallback?(false)
             case .success(let data):
+                self?.fetchingDataCallback?(true)
                 self?.news = data
             }
         }

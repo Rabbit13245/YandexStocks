@@ -7,6 +7,7 @@
 
 import UIKit
 import Charts
+import NotificationBannerSwift
 
 enum StockDataSegments {
     case news
@@ -33,6 +34,7 @@ class StockDataViewController: UIViewController {
     }
     private var currentVisibleChartInterval: ChartsRequestType = .week {
         didSet {
+            startLoading()
             chartsData.loadData(requestType: currentVisibleChartInterval)
         }
     }
@@ -45,7 +47,7 @@ class StockDataViewController: UIViewController {
     private let companyProfileDataSource = CompanyProfileDataSource()
     private lazy var companyProfileData = CompanyProfileData(ticker: stock.ticker)
     
-    private lazy var chartsData = ChartsData(ticker: stock.ticker)
+    private lazy var chartsData = ChartsData(ticker: stock.ticker, requestType: currentVisibleChartInterval)
     
     // MARK: - UI
     private lazy var stockHeader: StockHeaderView = {
@@ -100,6 +102,16 @@ class StockDataViewController: UIViewController {
         return view
     }()
     
+    private lazy var loading: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        return indicator
+    }()
+    
+    private lazy var loadingBarButton: UIBarButtonItem = {
+        let barButton = UIBarButtonItem(customView: loading)
+        return barButton
+    }()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,7 +160,18 @@ class StockDataViewController: UIViewController {
                 self?.tableView.reloadData()
             }
         }
+        newsStockData.fetchingDataCallback = {[weak self] (result) in
+            DispatchQueue.main.async {
+                self?.stopLoading()
+                if !result {
+                    let banner = StatusBarNotificationBanner(title: "Error fetching news. Reload", style: .danger)
+                    banner.show()
+                }
+            }
+        }
         
+        startLoading()
+        newsStockData.reloadData()
         DispatchQueue.main.async {
             self.tableView.delegate = self.newsDelegate
             self.tableView.dataSource = self.newsDataSource
@@ -171,6 +194,18 @@ class StockDataViewController: UIViewController {
                 self?.tableView.reloadData()
             }
         }
+        companyProfileData.fetchingDataCallback = {[weak self] (result) in
+            DispatchQueue.main.async {
+                self?.stopLoading()
+                if !result {
+                    let banner = StatusBarNotificationBanner(title: "Error fetching company info. Reload", style: .danger)
+                    banner.show()
+                }
+            }
+        }
+        
+        startLoading()
+        companyProfileData.reloadData()
         
         DispatchQueue.main.async {
             self.tableView.delegate = self.companyProfileDelegate
@@ -190,7 +225,35 @@ class StockDataViewController: UIViewController {
             self?.updateChart()
         }
         
-        print(chartsData.stockChartData)
+        startLoading()
+        chartsData.loadData(requestType: currentVisibleChartInterval)
+        chartsData.fetchingDataCallback = {[weak self] (result) in
+            DispatchQueue.main.async {
+                self?.stopLoading()
+                if !result {
+                    let banner = StatusBarNotificationBanner(title: "Error fetching chart data. Reload", style: .danger)
+                    banner.show()
+                }
+            }
+        }
+    }
+    
+    private func startLoading() {
+        loading.startAnimating()
+        navigationItem.rightBarButtonItem = loadingBarButton
+        
+        if currentVisibleData == .chart {
+            chartFooter.isEnabled = false
+        } else {
+            chartFooter.isEnabled = true
+        }
+    }
+    
+    private func stopLoading() {
+        loading.stopAnimating()
+        navigationItem.rightBarButtonItem = nil
+        
+        chartFooter.isEnabled = true
     }
     
     private func setupView() {

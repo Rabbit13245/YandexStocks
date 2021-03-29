@@ -3,20 +3,32 @@ PODS:
     - Charts/Core (= 3.6.0)
   - Charts/Core (3.6.0)
   - Kingfisher (6.2.1)
+  - MarqueeLabel (4.0.5)
+  - NotificationBannerSwift (3.0.6):
+    - MarqueeLabel (~> 4.0.5)
+    - SnapKit (~> 5.0.1)
+  - SnapKit (5.0.1)
 
 DEPENDENCIES:
   - Charts
   - Kingfisher (~> 6.0)
+  - NotificationBannerSwift (~> 3.0.0)
 
 SPEC REPOS:
   trunk:
     - Charts
     - Kingfisher
+    - MarqueeLabel
+    - NotificationBannerSwift
+    - SnapKit
 
 SPEC CHECKSUMS:
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
   Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
+  MarqueeLabel: 00cc0bcd087111dca575878b3531af980559707d
+  NotificationBannerSwift: 7021be2338f8f29cf424b0aca43da462bf9e2a1a
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
-PODFILE CHECKSUM: 355986772b462649d4ec6268f8737c90e738eae0
+PODFILE CHECKSUM: d104a6905a315b29c6bb2ac57547deda7f9f31c6
 
 COCOAPODS: 1.10.0

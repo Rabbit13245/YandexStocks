@@ -15,6 +15,12 @@ class StockHeaderView: UIView {
             segmentedControl.isEnabled = segControlEnabled
         }
     }
+    
+    var isEnabled: Bool = true {
+        didSet {
+            segmentedControl.isEnabled = isEnabled
+        }
+    }
     // MARK: - Private
     private var segments: [String]
     

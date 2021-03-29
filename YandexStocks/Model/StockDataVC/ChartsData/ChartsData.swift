@@ -27,19 +27,24 @@ class ChartsData {
     }
     
     var updateChart: (() -> Void)?
+    var fetchingDataCallback: ((Bool) -> Void)?
     
     // MARK: - Private
     private let ticker: String
+    private var requestType: ChartsRequestType
     
     // MARK: - Dependencies
     private let companyManager = CompanyManager()
+    
     // MARK: - Initializers
-    init(ticker: String) {
+    init(ticker: String, requestType: ChartsRequestType) {
         self.ticker = ticker
+        self.requestType = requestType
         
-        loadData(requestType: .week)
+        //loadData(requestType: self.requestType)
     }
     
+    // MARK: - Public
     func createChartArray() -> [ChartDataEntry] {
         var chartDataArray = [ChartDataEntry]()
         var i = 0
@@ -51,7 +56,6 @@ class ChartsData {
         return chartDataArray
     }
     
-    // MARK: - Public
     func loadData(requestType: ChartsRequestType) {
         var res = "D"
         
@@ -72,14 +76,18 @@ class ChartsData {
             res = "M"
         }
         
+        print("request chart data: \(requestType)")
         companyManager.getChartData(ticker: ticker,
                                     res: res,
                                     from: String(Int(from)),
                                     to: String(Int(to))) { [weak self] (result) in
             switch result {
             case .failure:
-                print("error while fetching news")
+                print("error while fetching chart data \(requestType)")
+                self?.fetchingDataCallback?(false)
             case .success(var data):
+                print("succes get chart data \(requestType)")
+                self?.fetchingDataCallback?(true)
                 data.formatDescription(with: requestType)
                 self?.stockChartData = data
             }

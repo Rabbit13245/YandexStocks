@@ -20,7 +20,7 @@ class CompanyProfileTableViewCell: UITableViewCell {
     // MARK: - Private
     private func setupView() {
         fieldName.font = Font.H4
-        fieldValue.font = Font.H2
+        fieldValue.font = Font.H3
     }
 }
 
