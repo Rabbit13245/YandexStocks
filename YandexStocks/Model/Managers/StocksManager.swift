@@ -6,13 +6,21 @@
 //
 
 import Foundation
+import Starscream
 
 protocol IStocksManager {
     
 }
 
 class StocksManager: IStocksManager {
-    private var networkManager = NetworkManager()
+    private let networkManager = NetworkManager()
+    private var isWebsocketConnected = false
+    private var socket: WebSocket?
+    
+    init() {
+        prepareForWebsockets()
+        subscribeStock(with: "YNDX")
+    }
     
     /// Получить трендовые акции для отображения на первой вкладке
     func getStocksTrend(completion: @escaping (Result<[Stock], ManagerError>) -> Void) {
@@ -114,8 +122,57 @@ class StocksManager: IStocksManager {
             CoreDataManager.shared.removeObject(stock)
         }
     }
+    
+    func subscribeStock(with ticker: String) {
+        socket?.write(string: "{type:subscribe,symbol:\(ticker)}")
+    }
+    
+    func unsubscribeStock(with ticker: String) {
+        socket?.write(string: "{type:unsubscribe,symbol:\(ticker)}")
+    }
+    
+    // MARK: - Private
+    private func prepareForWebsockets() {
+        guard let url = RequestFactory.getFinnhubWebsocketAddress() else { return }
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 5
+        socket = WebSocket(request: request)
+        socket?.delegate = self
+        socket?.connect()
+    }
 }
 
+extension StocksManager: WebSocketDelegate {
+    func didReceive(event: WebSocketEvent, client: WebSocket) {
+        switch event {
+            case .connected(let headers):
+                isWebsocketConnected = true
+                print("websocket is connected: \(headers)")
+            case .disconnected(let reason, let code):
+                isWebsocketConnected = false
+                print("websocket is disconnected: \(reason) with code: \(code)")
+            case .text(let string):
+                print("Received text: \(string)")
+            case .binary(let data):
+                print("Received data: \(data.count)")
+            case .ping(_):
+                break
+            case .pong(_):
+                break
+            case .viabilityChanged(_):
+                break
+            case .reconnectSuggested(_):
+                break
+            case .cancelled:
+                isWebsocketConnected = false
+            case .error(let error):
+                isWebsocketConnected = false
+                print("ERROR WEBSOCKET!!! \(error)")
+            }
+    }
+    
+    
+}
 enum ManagerError: Error {
     case error
 }

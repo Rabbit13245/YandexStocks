@@ -21,6 +21,7 @@ class RequestFactory {
     private static let finnhubCompanyProfileUrlString = "https://finnhub.io/api/v1/stock/profile2?symbol="
     private static let finnhubNewsUrlString = "https://finnhub.io/api/v1/company-news?symbol="
     private static let finnhubChartUrlString = "https://finnhub.io/api/v1/stock/candle?symbol="
+    private static let finnhubWebsockerUrlString = "wss://ws.finnhub.io?token="
     
     static func getTrendStocksRequest() -> Request<MobiumParser>? {
         let url = URL(string: "\(mboumTrendUrlString)\(mboumToken)")
@@ -66,5 +67,10 @@ class RequestFactory {
                                          to: String) -> Request<FinnhubChartsDataParser>? {
         let url = URL(string: "\(finnhubChartUrlString)\(ticker)&resolution=\(res)&from=\(from)&to=\(to)&token=\(finnhubToken)")
         return Request(url: url, parser: FinnhubChartsDataParser())
+    }
+    
+    static func getFinnhubWebsocketAddress() -> URL? {
+        guard let url = URL(string: "\(finnhubWebsockerUrlString)\(finnhubToken)") else { return nil }
+        return url
     }
 }

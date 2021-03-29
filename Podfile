@@ -9,4 +9,5 @@ target 'YandexStocks' do
   pod 'Kingfisher', '~> 6.0'
   pod 'Charts'
   pod 'NotificationBannerSwift', '~> 3.0.0'
+  pod 'Starscream', '~> 4.0.0'
 end

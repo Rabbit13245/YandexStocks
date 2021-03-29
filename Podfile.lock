@@ -8,11 +8,13 @@ PODS:
     - MarqueeLabel (~> 4.0.5)
     - SnapKit (~> 5.0.1)
   - SnapKit (5.0.1)
+  - Starscream (4.0.4)
 
 DEPENDENCIES:
   - Charts
   - Kingfisher (~> 6.0)
   - NotificationBannerSwift (~> 3.0.0)
+  - Starscream (~> 4.0.0)
 
 SPEC REPOS:
   trunk:
@@ -21,6 +23,7 @@ SPEC REPOS:
     - MarqueeLabel
     - NotificationBannerSwift
     - SnapKit
+    - Starscream
 
 SPEC CHECKSUMS:
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
@@ -28,7 +31,8 @@ SPEC CHECKSUMS:
   MarqueeLabel: 00cc0bcd087111dca575878b3531af980559707d
   NotificationBannerSwift: 7021be2338f8f29cf424b0aca43da462bf9e2a1a
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
 
-PODFILE CHECKSUM: d104a6905a315b29c6bb2ac57547deda7f9f31c6
+PODFILE CHECKSUM: 6c9103a4e078e3ae074522c55e83365ab2638b8b
 
 COCOAPODS: 1.10.0
