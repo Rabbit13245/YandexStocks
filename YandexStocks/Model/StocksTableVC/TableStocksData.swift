@@ -15,21 +15,30 @@ class TableStocksData {
     var fetchingDataCallback: ((Bool) -> Void)?
     var stockPriceUpdateCallback: ((String, Double) -> Void)?
     
-    var currentVisibleStocks = [Stock]()
-    var searchResultStocks = [Stock]()
-    var isSearch: Bool = false
-    var trendStocks = [Stock]() {
-        didSet {
-            //checkFavourite()
+    var currentVisibleStocks: [Stock] {
+        switch currentVisibleData {
+        case .trend:
+            return trendStocks
+        case .favourite:
+            return favouriteStocks
+        case .search:
+            return searchResultStocks
         }
     }
-    var favouriteStocks = [Stock]() {
+    var searchResultStocks = [Stock]()
+    var trendStocks = [Stock]()
+    var favouriteStocks = [Stock]()
+    var fullStocks = [Stock]()
+    
+    private var currentVisibleData: StockSegments = .trend {
         didSet {
-            //checkFavourite()
+            asyncUpdateData?()
         }
     }
     
-    private var currentVisibleData: StockSegments = .trend
+    init() {
+        configure()
+    }
     
     // MARK: - Public
     func changeFavourite(_ cell: StockTableViewCell) {
@@ -40,7 +49,6 @@ class TableStocksData {
             (trendStocks.first { $0.ticker.uppercased() == cell.stockTicker?.uppercased()})?.isFavourite = false
             favouriteStocks = favouriteStocks.filter { $0.ticker.uppercased() != cell.stockTicker?.uppercased() }
             if currentVisibleData == .favourite {
-                currentVisibleStocks = favouriteStocks
                 asyncUpdateData?()
             }
         } else {
@@ -55,34 +63,28 @@ class TableStocksData {
     
     func changeVisibleStocks(_ visibleSegment: StockSegments) {
         currentVisibleData = visibleSegment
-        switch visibleSegment {
-        case .favourite:
-            currentVisibleStocks = favouriteStocks
-        case .trend:
-            currentVisibleStocks = trendStocks
-        }
     }
     
     func search(_ query: String) {
-        guard isSearch else {
-            switch currentVisibleData {
-            case .favourite:
-                currentVisibleStocks = favouriteStocks
-            case .trend:
-                currentVisibleStocks = trendStocks
-            }
+        guard currentVisibleData == .search else {
             asyncUpdateData?()
             return
         }
         
-        currentVisibleStocks.removeAll()
-        let findedItems = trendStocks.filter {
-            $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
+        searchResultStocks.removeAll()
+        let findedItems: [Stock]
+        if fullStocks.count == 0 {
+            findedItems = trendStocks.filter {
+                $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
+        } else {
+            findedItems = fullStocks.filter {
+                $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
+        }
         
         for i in Range(0...4) {
             if i <= findedItems.count - 1 {
                 let stock = findedItems[i]
-                currentVisibleStocks.append(stock)
+                searchResultStocks.append(stock)
             } else {
                 break
             }
@@ -108,7 +110,6 @@ class TableStocksData {
             case .success(let stocksData):
                 self?.trendStocks = stocksData
                 self?.checkFavourite()
-                self?.currentVisibleStocks = stocksData
                 self?.asyncUpdateData?()
                 self?.fetchingDataCallback?(true)
                 
@@ -118,12 +119,23 @@ class TableStocksData {
             }
         }
         
+//        stocksManager.getAllStocksForSearch { [weak self] (result) in
+//            switch result {
+//            case .failure:
+//                print("error while fetching full list of stocks")
+//            case .success(let stocks):
+//                self?.fullStocks = stocks
+//            }
+//        }
+    }
+    
+    // MARK: - Private
+    private func configure() {
         stocksManager.stockPriceUpdateCallback = {[weak self] (ticker, newPrice) in
             self?.priceUpdated(ticker: ticker, newPrice: newPrice)
         }
     }
     
-    // MARK: - Private
     private func checkFavourite() {
         let favSet = Set(favouriteStocks)
         let trendSet = Set(trendStocks)

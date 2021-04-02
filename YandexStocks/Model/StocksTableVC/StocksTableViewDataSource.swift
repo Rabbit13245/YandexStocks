@@ -34,15 +34,15 @@ class StocksTableViewDataSource: NSObject, UITableViewDataSource {
         let model = stocksData?.currentVisibleStocks[indexPath.row]
         guard let safeModel = model else { return cell }
         
-        if safeModel.logoUrl == nil {
-            safeModel.getLogoUrl { (result) in
-                if result {
-                    DispatchQueue.main.async {
-                        cell.configure(with: safeModel)
-                    }
-                }
-            }
-        }
+//        if safeModel.logoUrl == nil {
+//            safeModel.getLogoUrl { (result) in
+//                if result {
+//                    DispatchQueue.main.async {
+//                        cell.configure(with: safeModel)
+//                    }
+//                }
+//            }
+//        }
 
         cell.configure(with: safeModel)
         cell.odd = indexPath.row % 2 > 0

@@ -77,8 +77,6 @@ class FinnhubLogoParser: IParser {
     
     func parse(data: Data) -> String? {
         guard let logoResponse = try? JSONDecoder().decode(FinnhubCompanyResponse.self, from: data) else { return nil }
-        print("FFFF")
-        print(logoResponse.logo)
         return logoResponse.logo
     }
 }

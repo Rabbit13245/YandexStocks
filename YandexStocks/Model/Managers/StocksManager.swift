@@ -32,21 +32,21 @@ class StocksManager: IStocksManager {
     /// Получить трендовые акции для отображения на первой вкладке
     func getStocksTrend(completion: @escaping (Result<[Stock], ManagerError>) -> Void) {
         //getFakeTrendStocksRequest
-        guard let request = RequestFactory.getTrendStocksRequest() else {
+        guard let request = RequestFactory.getFakeTrendStocksRequest() else {
             completion(.failure(.error))
             return
         }
         
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-//            self.networkManager.makeRequest(request) { (result) in
-//                switch result {
-//                case .failure:
-//                    completion(.failure(.error))
-//                case .success(let data):
-//                    completion(.success(data))
-//                }
-//            }
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.networkManager.makeRequest(request) { (result) in
+                switch result {
+                case .failure:
+                    completion(.failure(.error))
+                case .success(let data):
+                    completion(.success(data))
+                }
+            }
+        }
         
         networkManager.makeRequest(request) { (result) in
             switch result {
@@ -81,7 +81,7 @@ class StocksManager: IStocksManager {
         
         networkManager.makeRequest(request) { (result) in
             switch result {
-            case .failure:
+            case .failure(let err):
                 completion(.failure(.error))
             case .success(let data):
                 completion(.success(data))
@@ -116,7 +116,7 @@ class StocksManager: IStocksManager {
         networkManager.makeRequest(request) { (result) in
             switch result {
             case .failure(let f):
-                print(f)
+                print("requset:\(String(describing: request.url)) error: \(f)")
                 completion(.failure(.error))
             case .success(let data):
                 completion(.success(data))
