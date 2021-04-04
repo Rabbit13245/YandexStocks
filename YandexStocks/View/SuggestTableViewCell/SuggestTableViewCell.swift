@@ -16,6 +16,7 @@ class SuggestTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        setupCollectionView()
     }
     
     private func setupCollectionView() {
@@ -44,10 +45,19 @@ extension SuggestTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
     }
 }
 
+extension SuggestTableViewCell: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width: 102, height: collectionView.bounds.height / 3)
+    }
+}
+
 extension SuggestTableViewCell: IConfigurableView {
     typealias IConfigurationModel = String
     
     func configure(with model: String) {
-        
+        collectionView.layoutSubviews()
     }
 }

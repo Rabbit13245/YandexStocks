@@ -145,6 +145,12 @@ class TableStocksData {
                 $0.isFavourite = true
             }
         }
+        
+        trendStocks.forEach { (stock) in
+            if stocksForUpdate.contains(stock) {
+                stock.logoUrl = stocksForUpdate.first { $0.ticker == stock.ticker }?.logoUrl
+            }
+        }
     }
     
     private func priceUpdated(ticker: String, newPrice: Double) {

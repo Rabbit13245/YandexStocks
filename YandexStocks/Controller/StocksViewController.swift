@@ -54,9 +54,9 @@ class StocksViewController: UIViewController {
     private lazy var searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: searchResultController)
         searchController.searchBar.placeholder = "Find company or ticker"
+        searchController.delegate = self
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
-        searchController.delegate = self
         //searchController.obscuresBackgroundDuringPresentation = false
         return searchController
     }()
@@ -145,7 +145,7 @@ class StocksViewController: UIViewController {
         let leftItem = UIBarButtonItem(customView: titleStackView)
         navigationItem.leftBarButtonItem = leftItem
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
+        navigationItem.hidesSearchBarWhenScrolling = false
         
         view.backgroundColor = UIColor.systemBackground
 
@@ -153,6 +153,8 @@ class StocksViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(loading)
         setupLayout()
+        
+        definesPresentationContext = true
     }
     
     private func setupLayout() {
@@ -198,25 +200,32 @@ class StocksViewController: UIViewController {
 extension StocksViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         currentVisibleData = .search
-        tableStocksData.changeVisibleStocks(currentVisibleData)
-        tableView.reloadData()
+        if let text = searchBar.text,
+           text.isEmpty {
+            searchResultController.showSuggestedSearches = true
+        } else {
+            searchResultController.showSuggestedSearches = false
+        }
+
+//        tableStocksData.changeVisibleStocks(currentVisibleData)
+//        tableView.reloadData()
     }
     
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        stockHeader.segControlEnabled = false
-    }
+//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+//        stockHeader.segControlEnabled = false
+//    }
     
 //    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
 //        isSearch = false
 //        stockHeader.segControlEnabled = true
 //    }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        currentVisibleData = StockSegments(rawValue: currentSegment) ?? .trend
-        tableStocksData.changeVisibleStocks(currentVisibleData)
-        tableView.reloadData()
-        stockHeader.segControlEnabled = true
-    }
+//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+//        currentVisibleData = StockSegments(rawValue: currentSegment) ?? .trend
+//        tableStocksData.changeVisibleStocks(currentVisibleData)
+//        tableView.reloadData()
+//        stockHeader.segControlEnabled = true
+//    }
 }
 
 extension StocksViewController: UISearchResultsUpdating {
@@ -228,7 +237,8 @@ extension StocksViewController: UISearchResultsUpdating {
 }
 
 extension StocksViewController: UISearchControllerDelegate {
-    func didPresentSearchController(_ searchController: UISearchController) {
-        searchController.searchResultsController?.view.isHidden = false
+    func presentSearchController(_ searchController: UISearchController) {
+        searchController.showsSearchResultsController = true
+        searchResultController.showSuggestedSearches = true
     }
 }

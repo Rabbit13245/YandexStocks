@@ -12,7 +12,11 @@ class SuggestCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        setupView()
     }
-
+    
+    private func setupView() {
+        backgroundColor = UIColor(named: "grayColor")
+        layer.cornerRadius = 20
+    }
 }
