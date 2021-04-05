@@ -111,7 +111,7 @@ class TableStocksData {
                     print("error while searching stocks")
                 case .success(let data):
                     data.forEach {
-                        if let contains = self?.trendStocks.contains($0),
+                        if let contains = self?.favouriteStocks.contains($0),
                            contains {
                             $0.isFavourite = true
                         }
