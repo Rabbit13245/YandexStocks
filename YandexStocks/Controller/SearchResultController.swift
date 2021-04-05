@@ -129,10 +129,12 @@ extension SearchResultController: UITableViewDelegate, UITableViewDataSource {
             let model = stocksData?.searchResultStocks[indexPath.row]
             guard let safeModel = model else { return cell }
             
-            safeModel.getData2 { (result) in
-                if result {
-                    DispatchQueue.main.async {
-                        cell.configure(with: safeModel)
+            if safeModel.change == "" {
+                safeModel.getData2 { (result) in
+                    if result {
+                        DispatchQueue.main.async {
+                            cell.configure(with: safeModel)
+                        }
                     }
                 }
             }
