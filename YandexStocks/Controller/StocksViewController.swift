@@ -230,7 +230,8 @@ extension StocksViewController: UISearchBarDelegate {
 
 extension StocksViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        if let query = searchController.searchBar.text {
+        if let query = searchController.searchBar.text,
+           query != "" {
             tableStocksData.search(query)
         }
     }
