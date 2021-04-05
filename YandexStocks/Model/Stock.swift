@@ -21,13 +21,11 @@ class Stock: Hashable {
     var logoUrl: String?
     
     static func == (lhs: Stock, rhs: Stock) -> Bool {
-        return lhs.ticker.uppercased() == rhs.ticker.uppercased() &&
-            lhs.name.uppercased() == rhs.name.uppercased()
+        return lhs.ticker.uppercased() == rhs.ticker.uppercased()
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(ticker)
-        hasher.combine(name)
     }
     
     init(from model: StockDB) {
@@ -186,4 +184,16 @@ struct FinnhubSearchItemResponse: Decodable {
     var description: String
     var displaySymbol: String
     var symbol: String
+}
+
+struct FinancialSearchResponse: Decodable {
+    var symbol: String
+    var name: String
+    var price: Double?
+}
+
+struct IexapisStockResponse: Decodable {
+    var symbol: String
+    var companyName: String
+    var latestPrice: Double
 }

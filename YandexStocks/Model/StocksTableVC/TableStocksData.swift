@@ -37,6 +37,8 @@ class TableStocksData {
         }
     }
     
+    private var timer: Timer?
+    
     init() {
         configure()
     }
@@ -53,6 +55,10 @@ class TableStocksData {
                 asyncUpdateData?()
             }
         } else {
+            if let stockFromCell = cell.stock,
+               !trendStocks.contains(stockFromCell) {
+                trendStocks.append(stockFromCell)
+            }
             if let stockForAdd = trendStocks.filter({ $0.ticker.uppercased() == cell.stockTicker?.uppercased()}).first {
                 cell.isFavourite = true
                 stocksManager.addFavouriteStock(stockForAdd)
@@ -72,47 +78,63 @@ class TableStocksData {
             return
         }
         
-        searchResultStocks.removeAll()
+        search(query: query)
         
-//        stocksManager.searchStocks(query: query) { [weak self] (result) in
-//            switch result {
-//            case .failure:
-//                print("error while searching stocks")
-//            case .success(let data):
-//                print("\(query): \(data.count)")
-//                data.forEach {
-//                    self?.searchResultStocks.append($0)
-//                }
-//            }
-//            self?.asyncSearchUpdateData?()
+//        let findedItems: [Stock]
+//        if fullStocks.count == 0 {
+//            findedItems = trendStocks.filter {
+//                $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
+//        } else {
+//            findedItems = fullStocks.filter {
+//                $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
 //        }
-        
-        searchResultStocks.removeAll()
-        let findedItems: [Stock]
-        if fullStocks.count == 0 {
-            findedItems = trendStocks.filter {
-                $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
-        } else {
-            findedItems = fullStocks.filter {
-                $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
-        }
-
-        for i in Range(0...4) {
-            if i <= findedItems.count - 1 {
-                let stock = findedItems[i]
-                searchResultStocks.append(stock)
-            } else {
-                break
+//
+//        for i in Range(0...4) {
+//            if i <= findedItems.count - 1 {
+//                let stock = findedItems[i]
+//                searchResultStocks.append(stock)
+//            } else {
+//                break
+//            }
+//        }
+//        asyncSearchUpdateData?()
+    }
+    
+    private func search(query: String) {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false, block: {[weak self] _ in
+            self?.searchResultStocks.removeAll()
+            
+            self?.stocksManager.searchStocks(query: query) { [weak self] (result) in
+                switch result {
+                case .failure:
+                    print("error while searching stocks")
+                case .success(let data):
+                    data.forEach {
+                        if let contains = self?.trendStocks.contains($0),
+                           contains {
+                            $0.isFavourite = true
+                        }
+                        self?.searchResultStocks.append($0)
+                    }
+                }
+                self?.asyncSearchUpdateData?()
             }
-        }
-        asyncSearchUpdateData?()
+        })
     }
     
     func getStock(by index: Int) -> Stock? {
-        guard index < currentVisibleStocks.count else {
-            return nil
+        if currentVisibleData == .search {
+            guard index < searchResultStocks.count else {
+                return nil
+            }
+            return searchResultStocks[index]
+        } else {
+            guard index < currentVisibleStocks.count else {
+                return nil
+            }
+            return currentVisibleStocks[index]
         }
-        return currentVisibleStocks[index]
     }
     
     func loadData() {
@@ -166,6 +188,11 @@ class TableStocksData {
             if stocksForUpdate.contains(stock) {
                 stock.logoUrl = stocksForUpdate.first { $0.ticker == stock.ticker }?.logoUrl
             }
+        }
+        
+        let stocksForAppend = favSet.subtracting(trendSet)
+        stocksForAppend.forEach { (newStock) in
+            trendStocks.append(newStock)
         }
     }
     

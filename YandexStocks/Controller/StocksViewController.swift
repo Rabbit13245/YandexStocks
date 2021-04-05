@@ -10,7 +10,7 @@ import NotificationBannerSwift
 
 protocol ISuggestedSearch: class {
     func didSelectSuggestedItem(query: String)
-    func didSelectStock()
+    func didSelectStock(stock: Stock)
 }
 
 enum StockSegments: Int {
@@ -119,7 +119,7 @@ class StocksViewController: UIViewController {
         tableViewDataSource.currentVC = self
         
         tableViewDelegate.stocksData = tableStocksData
-        tableViewDelegate.vc = self
+        tableViewDelegate.delegate = self
         
         tableStocksData.asyncUpdateData = {[weak self] in
             DispatchQueue.main.async {
@@ -218,19 +218,7 @@ extension StocksViewController: UISearchBarDelegate {
         } else {
             searchResultController.showSuggestedSearches = false
         }
-
-//        tableStocksData.changeVisibleStocks(currentVisibleData)
-//        tableView.reloadData()
     }
-    
-//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//        stockHeader.segControlEnabled = false
-//    }
-    
-//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-//        isSearch = false
-//        stockHeader.segControlEnabled = true
-//    }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         currentVisibleData = StockSegments(rawValue: currentSegment) ?? .trend
@@ -264,7 +252,8 @@ extension StocksViewController: ISuggestedSearch {
         tableStocksData.search(query)
     }
     
-    func didSelectStock() {
-        
+    func didSelectStock(stock: Stock) {
+        let stockDataVC = StockDataViewController(stock: stock)
+        navigationController?.pushViewController(stockDataVC, animated: true)
     }
 }

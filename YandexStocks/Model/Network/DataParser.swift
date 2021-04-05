@@ -126,3 +126,37 @@ class FinnhubSearchParser: IParser {
         }
     }
 }
+
+class FinancialSearchParser: IParser {
+    typealias Model = [Stock]
+    
+    func parse(data: Data) -> [Stock]? {
+        guard let response = try? JSONDecoder().decode([FinancialSearchResponse].self, from: data) else { return nil }
+        return response.map {
+            return Stock(ticker: $0.symbol, name: $0.name, isGrowth: false, price: 0, change: "")
+        }
+    }
+}
+
+class FinancialTrendParser: IParser {
+    typealias Model = [Stock]
+    
+    func parse(data: Data) -> [Stock]? {
+        guard let response = try? JSONDecoder().decode([FinancialSearchResponse].self, from: data) else { return nil }
+        return response.map {
+            return Stock(ticker: $0.symbol, name: $0.name, isGrowth: false, price: $0.price ?? 0, change: "")
+        }
+    }
+}
+
+class IexapisTrendParser: IParser {
+    typealias Model = [Stock]
+    
+    func parse(data: Data) -> [Stock]? {
+        guard let response = try? JSONDecoder().decode([IexapisStockResponse].self, from: data) else { return nil }
+        
+        return response.map {
+            return Stock(ticker: $0.symbol, name: $0.companyName, isGrowth: false, price: $0.latestPrice, change: "")
+        }
+    }
+}

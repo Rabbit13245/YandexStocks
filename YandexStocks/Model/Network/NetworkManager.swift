@@ -25,7 +25,7 @@ class NetworkManager {
         }
         let urlRequest = URLRequest(url: url)
         
-        cancelRequest()
+        cancelableDataTask?.cancel()
         
         cancelableDataTask = URLSession.shared.dataTask(with: urlRequest) {(data, response, error) in
             
@@ -66,7 +66,7 @@ class NetworkManager {
             
             let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 200
             
-            if statusCode != 200 {
+            if !(200...2999).contains(statusCode) {
                 return completionHandler(.failure(.requestError))
             }
             

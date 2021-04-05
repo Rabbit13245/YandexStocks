@@ -15,6 +15,8 @@ class StockTableViewCell: UITableViewCell {
             ticker.text = stockTicker
         }
     }
+    
+    private(set) var stock: Stock?
 
     public var favouriteButtonPressed: ((StockTableViewCell) -> Void)?
     
@@ -54,6 +56,7 @@ class StockTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         stockTicker = nil
+        stock = nil
         favouriteButtonPressed = nil
         isFavourite = false
         logo.image = UIImage(systemName: "banknote")
@@ -87,6 +90,7 @@ extension StockTableViewCell: IConfigurableView {
     
     func configure(with model: IConfigurationModel) {
         stockTicker = model.ticker
+        stock = model
         
         name.text = model.name
         currentPrice.text = "$" + String(format: "%.2f", model.price)

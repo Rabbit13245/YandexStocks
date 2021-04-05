@@ -10,9 +10,9 @@ import Foundation
 class RequestFactory {
     private static let mboumToken = "yYJvQtsAIR9Dt894Ztg6mfAyt4OHVKQhnJdVzsosTzPTUx98XFPLeGxUzHnQ"
     private static let mboumTrendUrlString = "https://mboum.com/api/v1/co/collections/?list=most_actives&start=1&apikey="
-   
-    private static let iexapisToken = "token=pk_2b9abbcc4e2d4f3188ec43a577ad3651"
-    private static let iexapisTrendUrlString = "https://cloud.iexapis.com/stable/stock/market/collection/list?collectionName=mostactive"
+
+    private static let iexapisToken = "&token=pk_2b9abbcc4e2d4f3188ec43a577ad3651"
+    private static let iexapisTrendUrlString = "https://cloud.iexapis.com/stable/stock/market/list/mostactive?listLimit=20"
     
     private static let finnhubToken = "c1ct6j748v6p6471mia0"
     private static let finnhubAllStocksUrlString = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token="
@@ -23,10 +23,25 @@ class RequestFactory {
     private static let finnhubSearchUrlString = "https://finnhub.io/api/v1/search?q="
     private static let finnhubWebsockerUrlString = "wss://ws.finnhub.io?token="
     
+    private static let financialToken = "b238b1c1757ac80b007ea80f252502fa"
+    private static let financialSearchUrlString = "https://financialmodelingprep.com/api/v3/search?query="
+    private static let financialTrendUrlString = "https://financialmodelingprep.com/api/v3/available-traded/list?apikey="
+    
     static func getTrendStocksRequest() -> Request<MobiumParser>? {
         let url = URL(string: "\(mboumTrendUrlString)\(mboumToken)")
         return Request(url: url, parser: MobiumParser())
     }
+    
+    static func getFinancialTrendRequest() -> Request<FinancialTrendParser>? {
+        let url = URL(string: "\(financialTrendUrlString)\(financialToken)")
+        return Request(url: url, parser: FinancialTrendParser())
+    }
+    
+    static func getIexapisTrendStocksRequest() -> Request<IexapisTrendParser>? {
+        let url = URL(string: "\(iexapisTrendUrlString)\(iexapisToken)")
+        return Request(url: url, parser: IexapisTrendParser())
+    }
+    
     static func getFakeTrendStocksRequest() -> Request<MobiumParser>? {
         guard let url = Bundle.main.url(forResource: "trendStocks", withExtension: "json") else {
             return nil
@@ -71,6 +86,11 @@ class RequestFactory {
     static func getFinnhubSearchRequest(for ticker: String) -> Request<FinnhubSearchParser>? {
         let url = URL(string: "\(finnhubSearchUrlString)\(ticker)&token=\(finnhubToken)")
         return Request(url: url, parser: FinnhubSearchParser())
+    }
+    
+    static func getFinancialSearchReqeust(for ticker: String) -> Request<FinancialSearchParser>? {
+        let url = URL(string: "\(financialSearchUrlString)\(ticker)&limit=10&exchange=NASDAQ&apikey=\(financialToken)")
+        return Request(url: url, parser: FinancialSearchParser())
     }
     
     static func getFinnhubWebsocketAddress() -> URL? {

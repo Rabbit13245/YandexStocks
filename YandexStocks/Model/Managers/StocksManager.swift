@@ -35,21 +35,21 @@ class StocksManager: IStocksManager {
     /// Получить трендовые акции для отображения на первой вкладке
     func getStocksTrend(completion: @escaping (Result<[Stock], ManagerError>) -> Void) {
         //getFakeTrendStocksRequest
-        guard let request = RequestFactory.getFakeTrendStocksRequest() else {
+        guard let request = RequestFactory.getIexapisTrendStocksRequest() else {
             completion(.failure(.error))
             return
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.networkManager.makeRequest(request) { (result) in
-                switch result {
-                case .failure:
-                    completion(.failure(.error))
-                case .success(let data):
-                    completion(.success(data))
-                }
-            }
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            self.networkManager.makeRequest(request) { (result) in
+//                switch result {
+//                case .failure:
+//                    completion(.failure(.error))
+//                case .success(let data):
+//                    completion(.success(data))
+//                }
+//            }
+//        }
         
         networkManager.makeRequest(request) { (result) in
             switch result {
@@ -95,7 +95,7 @@ class StocksManager: IStocksManager {
     
     func searchStocks(query: String,
                       completion: @escaping (Result<[Stock], ManagerError>) -> Void) {
-        guard let request = RequestFactory.getFinnhubSearchRequest(for: query)else {
+        guard let request = RequestFactory.getFinancialSearchReqeust(for: query) else {
             completion(.failure(.error))
             return
         }

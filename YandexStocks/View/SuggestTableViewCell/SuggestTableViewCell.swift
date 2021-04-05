@@ -11,7 +11,9 @@ class SuggestTableViewCell: UITableViewCell {
     
     var didSelectPopularRequest: ((String) -> Void)?
     // MARK: - Private
-    let popularRequests = ["Apple", "Tesla", "AT&T", "Intel"]
+    let popularRequests = ["Apple", "Tesla", "AT&T",
+                           "Intel", "Amazon",
+                           "Microsoft", "Facebook"]
     
     @IBOutlet weak var collectionView: UICollectionView!
     

@@ -73,7 +73,7 @@ class SearchResultController: UIViewController {
 extension SearchResultController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 76
+        return showSuggestedSearches ? 130 : 76
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -88,10 +88,10 @@ extension SearchResultController: UITableViewDelegate, UITableViewDataSource {
 //    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if showSuggestedSearches {
-            
-        } else {
-            
+        if !showSuggestedSearches {
+            guard let stocksData = stocksData,
+                  let stock = stocksData.getStock(by: indexPath.row) else { return }
+            delegate?.didSelectStock(stock: stock)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -133,6 +133,16 @@ extension SearchResultController: UITableViewDelegate, UITableViewDataSource {
                 if result {
                     DispatchQueue.main.async {
                         cell.configure(with: safeModel)
+                    }
+                }
+            }
+            
+            if safeModel.logoUrl == nil {
+                safeModel.getLogoUrl { (result) in
+                    if result {
+                        DispatchQueue.main.async {
+                            cell.configure(with: safeModel)
+                        }
                     }
                 }
             }
