@@ -156,7 +156,7 @@ class StocksManager: IStocksManager {
     
     /// Удалить избранную акцию из кордаты
     func removeFavouriteStock(_ stock: Stock) {
-        unsubscribeStock(with: stock.ticker)
+        unsubscribeStock(with: stock.ticker, needRemove: true)
         let predicate = NSPredicate(format: "ticker == %@", stock.ticker.uppercased())
         guard let stocksForRemove = CoreDataManager.shared.fetchEntities(withName: String(describing: StockDB.self), withPredicate: predicate)
         else { return }
@@ -185,7 +185,7 @@ class StocksManager: IStocksManager {
         let text = "{\"type\":\"subscribe\",\"symbol\":\"\(ticker)\"}"
         print(text)
         
-        //tickers.insert(ticker)
+        tickersForAdd.insert(ticker)
         if isWebsocketConnected {
             socket?.connect()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -196,10 +196,12 @@ class StocksManager: IStocksManager {
         }
     }
     
-    func unsubscribeStock(with ticker: String) {
-//        if tickers.contains(ticker) {
-//            tickers.remove(ticker)
-//        }
+    func unsubscribeStock(with ticker: String, needRemove: Bool = false) {
+        if needRemove {
+            if tickersForAdd.contains(ticker) {
+                tickersForAdd.remove(ticker)
+            }
+        }
         let text = "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}"
         print(text)
         socket?.write(string: text)
