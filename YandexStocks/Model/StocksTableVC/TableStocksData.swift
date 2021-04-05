@@ -102,10 +102,9 @@ class TableStocksData {
     
     private func search(query: String) {
         timer?.invalidate()
-        searchResultStocks.removeAll()
-        asyncSearchUpdateData?()
         timer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false, block: {[weak self] _ in
             self?.stocksManager.searchStocks(query: query) { [weak self] (result) in
+                self?.searchResultStocks.removeAll()
                 switch result {
                 case .failure:
                     print("error while searching stocks")
