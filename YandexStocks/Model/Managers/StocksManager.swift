@@ -20,13 +20,16 @@ class StocksManager: IStocksManager {
     private var socket: WebSocket?
     private var tickersForAdd = Set<String>()
     
-    init() {
-        prepareForWebsockets()
-        subscriveBackground()
+    init(configureWebSocket: Bool = false) {
+        if configureWebSocket {
+            prepareForWebsockets()
+            subscriveForeground()
+        }
     }
     
     deinit {
-        unsubscribeBackground()
+        unsubscribeForeground()
+        socket?.disconnect()
     }
     
     /// Получить трендовые акции для отображения на первой вкладке
@@ -82,6 +85,25 @@ class StocksManager: IStocksManager {
         networkManager.makeRequest(request) { (result) in
             switch result {
             case .failure(let err):
+                print("error getAllStocksForSearch \(err)")
+                completion(.failure(.error))
+            case .success(let data):
+                completion(.success(data))
+            }
+        }
+    }
+    
+    func searchStocks(query: String,
+                      completion: @escaping (Result<[Stock], ManagerError>) -> Void) {
+        guard let request = RequestFactory.getFinnhubSearchRequest(for: query)else {
+            completion(.failure(.error))
+            return
+        }
+        
+        networkManager.makeCancelableRequest(request) { (result) in
+            switch result {
+            case .failure(let err):
+                print("search error: \(err)")
                 completion(.failure(.error))
             case .success(let data):
                 completion(.success(data))
@@ -178,14 +200,17 @@ class StocksManager: IStocksManager {
 //        if tickers.contains(ticker) {
 //            tickers.remove(ticker)
 //        }
-        if isWebsocketConnected {
-            socket?.connect()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self.socket?.write(string: "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}")
-            }
-        } else {
-            socket?.write(string: "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}")
-        }
+        let text = "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}"
+        print(text)
+        socket?.write(string: text)
+//        if isWebsocketConnected {
+//            socket?.connect()
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                self.socket?.write(string: "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}")
+//            }
+//        } else {
+//            socket?.write(string: "{\"type\":\"unsubscribe\",\"symbol\":\"\(ticker)\"}")
+//        }
     }
     
     // MARK: - Private
@@ -199,11 +224,12 @@ class StocksManager: IStocksManager {
         socket?.connect()
     }
     
-    private func subscriveBackground() {
+    private func subscriveForeground() {
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
-    private func unsubscribeBackground() {
+    private func unsubscribeForeground() {
         NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
@@ -215,6 +241,15 @@ class StocksManager: IStocksManager {
         if !isWebsocketConnected {
             socket.connect()
         }
+        print(tickersForAdd.count)
+    }
+    
+    @objc private func appMovedToBackground() {
+        for item in self.tickersForAdd {
+            unsubscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
+        }
+        socket?.disconnect()
+        print("disconnect")
     }
 }
 
@@ -229,17 +264,17 @@ extension StocksManager: WebSocketDelegate {
 //                    self.unsubscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
 //                }
 //            }
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                for item in self.tickersForAdd {
-//                    self.subscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
-//                }
-//            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                for item in self.tickersForAdd {
+                    self.subscribeStock(with: item) // бывают моменты когда тупит и надо отписаться
+                }
+            }
 
         case .disconnected(let reason, let code):
             isWebsocketConnected = false
             print("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("Received text: \(string)")
+//            print("Received text: \(string)")
             guard let data = try? JSONDecoder().decode(FinnhubWebsocketResponse.self, from: Data(string.utf8)),
                   let price = data.data.first?.p,
                   let ticker = data.data.first?.s else {
@@ -262,7 +297,7 @@ extension StocksManager: WebSocketDelegate {
         case .error(let error):
             isWebsocketConnected = false
             print("ERROR WEBSOCKET!!! \(String(describing: error))")
-            NotificationCenter.default.post(name: Notification.Name("WebsocketsError"), object: nil)
+//            NotificationCenter.default.post(name: Notification.Name("WebsocketsError"), object: nil)
         }
     }
 }

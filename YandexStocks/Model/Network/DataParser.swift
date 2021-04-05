@@ -111,3 +111,18 @@ class FinnhubChartsDataParser: IParser {
         return StockChartData(valueGraphData: response.c, rawDescription: response.t, formattedDesctiprion: [String]())
     }
 }
+
+class FinnhubSearchParser: IParser {
+    typealias Model = [Stock]
+    
+    func parse(data: Data) -> [Stock]? {
+        guard let response = try? JSONDecoder().decode(FinnhubSearchResponse.self, from: data) else { return nil }
+        return response.result.compactMap {
+            if !$0.symbol.contains(".") {
+                return Stock(ticker: $0.symbol, name: "", isGrowth: false, price: 0, change: "")
+            } else {
+                return nil
+            }
+        }
+    }
+}

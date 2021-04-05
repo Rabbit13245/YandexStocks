@@ -9,9 +9,10 @@ import Foundation
 
 class TableStocksData {
     // MARK: - Dependencies
-    private let stocksManager = StocksManager()
+    private let stocksManager = StocksManager(configureWebSocket: true)
     
     var asyncUpdateData: (() -> Void)?
+    var asyncSearchUpdateData: (() -> Void)?
     var fetchingDataCallback: ((Bool) -> Void)?
     var stockPriceUpdateCallback: ((String, Double) -> Void)?
     
@@ -72,6 +73,19 @@ class TableStocksData {
         }
         
         searchResultStocks.removeAll()
+//        stocksManager.searchStocks(query: query) { [weak self] (result) in
+//            switch result {
+//            case .failure:
+//                print("error while searching stocks")
+//            case .success(let data):
+//                data.forEach {
+//                    self?.searchResultStocks.append($0)
+//                }
+//            }
+//            self?.asyncSearchUpdateData?()
+//        }
+        
+        searchResultStocks.removeAll()
         let findedItems: [Stock]
         if fullStocks.count == 0 {
             findedItems = trendStocks.filter {
@@ -80,7 +94,7 @@ class TableStocksData {
             findedItems = fullStocks.filter {
                 $0.ticker.uppercased().contains(query.uppercased()) || $0.name.uppercased().contains(query.uppercased())}
         }
-        
+
         for i in Range(0...4) {
             if i <= findedItems.count - 1 {
                 let stock = findedItems[i]
@@ -89,7 +103,7 @@ class TableStocksData {
                 break
             }
         }
-        asyncUpdateData?()
+        asyncSearchUpdateData?()
     }
     
     func getStock(by index: Int) -> Stock? {

@@ -9,8 +9,9 @@ import UIKit
 
 class SuggestTableViewCell: UITableViewCell {
     
+    var didSelectPopularRequest: ((String) -> Void)?
     // MARK: - Private
-    let popularRequests = ["Apple", "Tesla", "AT&T", "Microsoft"]
+    let popularRequests = ["Apple", "Tesla", "AT&T", "Intel"]
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -43,6 +44,11 @@ extension SuggestTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
         cell.suggestLabel.text = model
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let request = popularRequests[indexPath.row]
+        didSelectPopularRequest?(request)
+    }
 }
 
 extension SuggestTableViewCell: UICollectionViewDelegateFlowLayout {
@@ -50,7 +56,7 @@ extension SuggestTableViewCell: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: 102, height: collectionView.bounds.height / 3)
+        return CGSize(width: 100, height: 40)
     }
 }
 

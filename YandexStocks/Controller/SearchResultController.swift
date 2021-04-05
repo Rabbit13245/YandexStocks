@@ -9,6 +9,10 @@ import UIKit
 
 class SearchResultController: UIViewController {
     
+    weak var delegate: ISuggestedSearch?
+    var stocksData: TableStocksData?
+    var favButtonPressed: ((StockTableViewCell) -> Void)?
+    
     var showSuggestedSearches: Bool = false {
         didSet {
             if oldValue != showSuggestedSearches {
@@ -36,9 +40,19 @@ class SearchResultController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        
+        configureData()
     }
     
     // MARK: - Private methods
+    private func configureData() {
+        stocksData?.asyncSearchUpdateData = {[weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+    }
+    
     private func setupView() {
         view.backgroundColor = UIColor.systemBackground
         view.addSubview(tableView)
@@ -57,8 +71,43 @@ class SearchResultController: UIViewController {
 }
 
 extension SearchResultController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 76
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return showSuggestedSearches ? NSLocalizedString("Popular requests", comment: "") : ""
+    }
+    
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let label = UILabel()
+//        label.text = "Popular requests"
+//        label.font = UIFont.boldSystemFont(ofSize: 18)
+//        return showSuggestedSearches ? label : UIView()
+//    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if showSuggestedSearches {
+            
+        } else {
+            
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return showSuggestedSearches ? 1 : 1
+        if showSuggestedSearches {
+            return 1
+        } else {
+            guard let count = stocksData?.searchResultStocks.count,
+                  count > 0 else {
+                tableView.isScrollEnabled = false
+                return 0
+            }
+            tableView.isScrollEnabled = true
+            return count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -67,12 +116,33 @@ extension SearchResultController: UITableViewDelegate, UITableViewDataSource {
                     withIdentifier: String(describing: SuggestTableViewCell.self),
                     for: indexPath) as? SuggestTableViewCell else { return UITableViewCell() }
             
+            cell.didSelectPopularRequest = {[weak self] (query) in
+                self?.delegate?.didSelectSuggestedItem(query: query)
+            }
+            
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(
                     withIdentifier: String(describing: StockTableViewCell.self),
                     for: indexPath) as? StockTableViewCell else { return UITableViewCell() }
             
+            let model = stocksData?.searchResultStocks[indexPath.row]
+            guard let safeModel = model else { return cell }
+            
+            safeModel.getData2 { (result) in
+                if result {
+                    DispatchQueue.main.async {
+                        cell.configure(with: safeModel)
+                    }
+                }
+            }
+            
+            cell.configure(with: safeModel)
+            cell.odd = indexPath.row % 2 > 0
+            
+            cell.favouriteButtonPressed = {[weak self] (cell) in
+                self?.favButtonPressed?(cell)
+            }
             return cell
         }
     }

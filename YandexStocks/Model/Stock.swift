@@ -84,6 +84,25 @@ class Stock: Hashable {
         }
     }
     
+    func getData2(completion: @escaping ((Bool) -> Void)) {
+        let stockManager = StocksManager()
+        stockManager.getPrices(for: ticker) {[weak self] (result) in
+            switch result {
+            case .failure:
+                print("Error update price for \(String(describing: self?.ticker))")
+                completion(false)
+            case .success(let data):
+                guard let safeData = data,
+                      let safeSalf = self else { return }
+                safeSalf.price = safeData.0
+                safeSalf.previousPrice = safeData.1
+                safeSalf.isGrowth = safeData.0 >= safeData.1
+                safeSalf.change = safeSalf.calculateChange()
+                completion(true)
+            }
+        }
+    }
+    
     func updatePrice(newPrice: Double) {
         isGrowth = newPrice >= price
         previousPrice = price
@@ -156,4 +175,15 @@ struct FinnhubWebsocketResponse: Decodable {
 struct FinnhubWebsocketItemResponse: Decodable {
     var s: String
     var p: Double
+}
+
+struct FinnhubSearchResponse: Decodable {
+    var count: Int
+    var result: [FinnhubSearchItemResponse]
+}
+
+struct FinnhubSearchItemResponse: Decodable {
+    var description: String
+    var displaySymbol: String
+    var symbol: String
 }

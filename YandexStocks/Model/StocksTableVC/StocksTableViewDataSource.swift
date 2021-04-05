@@ -14,15 +14,12 @@ class StocksTableViewDataSource: NSObject, UITableViewDataSource {
     var isSearch: Bool = false
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let count = stocksData?.currentVisibleStocks.count else {
+        guard let count = stocksData?.currentVisibleStocks.count,
+              count > 0 else {
             tableView.isScrollEnabled = false
             return 0
         }
-        if count > 0 {
-            tableView.isScrollEnabled = true
-        } else {
-            tableView.isScrollEnabled = false
-        }
+        tableView.isScrollEnabled = true
         return count
     }
     

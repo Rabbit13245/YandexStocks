@@ -8,6 +8,11 @@
 import UIKit
 import NotificationBannerSwift
 
+protocol ISuggestedSearch: class {
+    func didSelectSuggestedItem(query: String)
+    func didSelectStock()
+}
+
 enum StockSegments: Int {
     case trend = 0
     case favourite = 1
@@ -139,6 +144,12 @@ class StocksViewController: UIViewController {
         startLoading()
         tableView.dataSource = tableViewDataSource
         tableView.delegate = tableViewDelegate
+        
+        searchResultController.stocksData = tableStocksData
+        searchResultController.favButtonPressed = {[weak self] (cell) in
+            self?.changeFavourite(cell)
+        }
+        searchResultController.delegate = self
     }
     
     private func setupView() {
@@ -200,6 +211,7 @@ class StocksViewController: UIViewController {
 extension StocksViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         currentVisibleData = .search
+        tableStocksData.changeVisibleStocks(currentVisibleData)
         if let text = searchBar.text,
            text.isEmpty {
             searchResultController.showSuggestedSearches = true
@@ -220,12 +232,12 @@ extension StocksViewController: UISearchBarDelegate {
 //        stockHeader.segControlEnabled = true
 //    }
     
-//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//        currentVisibleData = StockSegments(rawValue: currentSegment) ?? .trend
-//        tableStocksData.changeVisibleStocks(currentVisibleData)
-//        tableView.reloadData()
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        currentVisibleData = StockSegments(rawValue: currentSegment) ?? .trend
+        tableStocksData.changeVisibleStocks(currentVisibleData)
+        tableView.reloadData()
 //        stockHeader.segControlEnabled = true
-//    }
+    }
 }
 
 extension StocksViewController: UISearchResultsUpdating {
@@ -240,5 +252,19 @@ extension StocksViewController: UISearchControllerDelegate {
     func presentSearchController(_ searchController: UISearchController) {
         searchController.showsSearchResultsController = true
         searchResultController.showSuggestedSearches = true
+    }
+}
+
+extension StocksViewController: ISuggestedSearch {
+    func didSelectSuggestedItem(query: String) {
+        navigationItem.searchController?.searchBar.text = query
+        currentVisibleData = .search
+        tableStocksData.changeVisibleStocks(currentVisibleData)
+        searchResultController.showSuggestedSearches = false
+        tableStocksData.search(query)
+    }
+    
+    func didSelectStock() {
+        
     }
 }
