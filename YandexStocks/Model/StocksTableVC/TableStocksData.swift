@@ -73,11 +73,13 @@ class TableStocksData {
         }
         
         searchResultStocks.removeAll()
+        
 //        stocksManager.searchStocks(query: query) { [weak self] (result) in
 //            switch result {
 //            case .failure:
 //                print("error while searching stocks")
 //            case .success(let data):
+//                print("\(query): \(data.count)")
 //                data.forEach {
 //                    self?.searchResultStocks.append($0)
 //                }

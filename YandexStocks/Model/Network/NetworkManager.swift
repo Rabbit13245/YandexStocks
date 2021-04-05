@@ -31,7 +31,7 @@ class NetworkManager {
             
             let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 200
             
-            if statusCode != 200 {
+            if !(200...2999).contains(statusCode) {
                 return completionHandler(.failure(.requestError))
             }
             
